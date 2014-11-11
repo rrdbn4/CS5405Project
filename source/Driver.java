@@ -16,9 +16,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	private SelectionSort ss;
 	private HeapSort hs;
 	private BubbleSort bs;  //bs is a pretty fitting variable name
-<<<<<<< HEAD
 	private ShellSort shs;
-=======
 	
 	private int sleepTime = 50;
 	private final int arraySize = 50;
@@ -27,7 +25,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	private int maxSpeed = 100, minSpeed = 1;
 	private JSlider numElements;
 	private int maxNumElements = 100, minNumElements = 20;
->>>>>>> 7b93b32edee206fbf8d32a070234bad94be0e13d
 
 	public Driver()
 	{

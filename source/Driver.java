@@ -11,6 +11,7 @@ public class Driver extends JFrame implements ActionListener
 	private SelectionSort ss;
 	private HeapSort hs;
 	private BubbleSort bs;  //bs is a pretty fitting variable name
+	private ShellSort shs;
 
 	public Driver()
 	{
@@ -56,6 +57,17 @@ public class Driver extends JFrame implements ActionListener
 			}
 			bs.setVisible(true);
 			bs.toFront();
+		}
+		else if (e.getSource() == shellSortMenuItem)
+		{
+			if (shs == null || shs.isClosed())
+			{
+				shs = new ShellSort();
+				desktop.add(shs);  //add bs to the desktop
+				shs.start();
+			}
+			shs.setVisible(true);
+			shs.toFront();
 		}
 	}
 	

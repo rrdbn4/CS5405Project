@@ -11,12 +11,15 @@ public class BubbleSort extends JInternalFrame implements Runnable
 	Executor executor;
 
 	float[] randArray;
-	int numElements;
+	int numElements = 30;
+	int sleepTime = 200;
+	int highlightIndex = 0;
 
 	public BubbleSort()
 	{
 		super("Bubble Sort", true, true, true, true);
-		numElements = 10;
+		setBounds(0, 0, 500, 400);
+
 		randArray = new float[numElements];
 		for(int i = 0; i < numElements; i++)
 			randArray[i] = (i+1) * (1.0f / (float)numElements);
@@ -40,9 +43,28 @@ public class BubbleSort extends JInternalFrame implements Runnable
 		randArray[j] = temp;
 	}
 
+	public int round(float input)
+	{
+		return (int)(input + 0.5f);
+	}
+
 	public void run()
 	{
+		for(int i = 0; i < randArray.length; i++)
+		{
+			for(int j = 0; j < randArray.length - i - 1; j++)
+			{
+				if(randArray[j + 1] < randArray[j])
+					swap(j, j+1);
+				highlightIndex = j + 1;
+				try
+				{
+					Thread.sleep(sleepTime);
+				} catch(InterruptedException e){}
 
+				repaint();
+			}
+		}
 	}
 
 	public void start()
@@ -53,6 +75,16 @@ public class BubbleSort extends JInternalFrame implements Runnable
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		g.drawOval(0,0,10,10);
+		float width = getWidth() - getInsets().left - getInsets().right;
+		float height = getHeight() - getInsets().top - getInsets().bottom;
+
+		for(int i = 0; i < randArray.length; i++)
+		{
+			if(i == highlightIndex)
+				g.setColor(Color.RED);
+			else
+				g.setColor(Color.BLUE);
+			g.fillRect(getInsets().left + round(i * (width / (float)numElements)), getInsets().top + round(height - (height * randArray[i])), round(width / (float)numElements), round(height * randArray[i]));
+		}
 	}
 }

@@ -1,9 +1,14 @@
 package code;
 
+import java.awt.BorderLayout;
 import java.awt.event.*;
-import javax.swing.*;
 
-public class Driver extends JFrame implements ActionListener
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+public class Driver extends JFrame implements ActionListener, ChangeListener
 {
 	private JDesktopPane desktop = new JDesktopPane();
 	private JMenuItem author, problemDescription, help, references, bubbleSortMenuItem, selectionSortMenuItem, mergeSortMenuItem, quickSortMenuItem, heapSortMenuItem, shellSortMenuItem;
@@ -11,6 +16,14 @@ public class Driver extends JFrame implements ActionListener
 	private SelectionSort ss;
 	private HeapSort hs;
 	private BubbleSort bs;  //bs is a pretty fitting variable name
+	
+	private int sleepTime = 50;
+	private final int arraySize = 50;
+	private JPanel sliderContainer;
+	private JSlider speed;
+	private int maxSpeed = 100, minSpeed = 1;
+	private JSlider numElements;
+	private int maxNumElements = 100, minNumElements = 20;
 
 	public Driver()
 	{
@@ -19,6 +32,17 @@ public class Driver extends JFrame implements ActionListener
 		setSize(1000,1000);
 		setJMenuBar(setupMenuBar());
 		add(desktop);
+		
+		speed = new JSlider(minSpeed, maxSpeed, sleepTime);
+		speed.setBorder(new TitledBorder("Speed"));
+		speed.addChangeListener(this);
+		numElements = new JSlider(minNumElements, maxNumElements, arraySize);
+		numElements.setBorder(new TitledBorder("Number of Elements"));
+		numElements.addChangeListener(this);
+		sliderContainer = new JPanel();
+		sliderContainer.add(speed);
+		sliderContainer.add(numElements);
+		add(sliderContainer, BorderLayout.SOUTH);
 		setVisible(true);
 	}
 
@@ -26,7 +50,7 @@ public class Driver extends JFrame implements ActionListener
 	{
 		if (e.getSource() == selectionSortMenuItem)
 		{
-			if (ss == null || ss.isClosed() == true)
+			if (ss == null || ss.isClosed())
 			{ 
 				ss = new SelectionSort();
 				desktop.add(ss);
@@ -37,7 +61,7 @@ public class Driver extends JFrame implements ActionListener
 		}
 		else if (e.getSource() == heapSortMenuItem)
 		{
-			if (hs == null || hs.isClosed() == true)
+			if (hs == null || hs.isClosed())
 			{ 
 				hs = new HeapSort();
 				desktop.add(hs);
@@ -46,16 +70,16 @@ public class Driver extends JFrame implements ActionListener
 			hs.setVisible(true);
 			hs.toFront();
 		}
-		else if (e.getSource() == bubbleSortMenuItem)
-		{
-			if (bs == null || bs.isClosed())
-			{
-				bs = new BubbleSort();
-				desktop.add(bs);  //add bs to the desktop
-				bs.start();
-			}
-			bs.setVisible(true);
-			bs.toFront();
+		else if (e.getSource() == bubbleSortMenuItem)		
+		{		
+			if (bs == null || bs.isClosed())		
+			{		
+				bs = new BubbleSort();		
+				desktop.add(bs);  //add bs to the desktop		
+				bs.start();		
+			}		
+			bs.setVisible(true);		
+			bs.toFront();		
 		}
 	}
 	
@@ -98,7 +122,9 @@ public class Driver extends JFrame implements ActionListener
 		demosMenu.add(shellSortMenuItem);
 		
 		JMenu multiTaskingMenu = new JMenu("MultiTasking");
-		//Not sure what he wants here....
+		//num elements slider
+		//speed slider
+		//start/stop button group?
 		
 		JMenu clockMenu = new JMenu("Clock");
 		clockMenu.add(new Clock());
@@ -108,5 +134,10 @@ public class Driver extends JFrame implements ActionListener
 		menuBar.add(multiTaskingMenu);
 		menuBar.add(clockMenu);
 		return menuBar;
+	}
+
+	public void stateChanged(ChangeEvent e)
+	{
+		
 	}
 }	

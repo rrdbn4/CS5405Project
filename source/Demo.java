@@ -1,3 +1,5 @@
+package code;
+
 import javax.swing.JApplet;
 
 public class Demo extends JApplet

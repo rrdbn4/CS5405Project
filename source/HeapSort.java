@@ -1,38 +1,56 @@
 package code;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.*;
 
-public class HeapSort extends JInternalFrame implements Runnable
+public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 {
 	private int[] numsToSort;
-	private final int arraySize = 50;
+	private int arraySize = 50;
 	private int heapSize;
 	
 	Executor executor;
 	private Lock mutex;
-	private int sleepTime = 40;
+	private int sleepTime = 50;
 	
 	private final Random rand;
 	private int currentIndex;
 	
+	private JPanel sliderContainer;
+	private JSlider speed;
+	private int maxSpeed = 100, minSpeed = 1;
+	private JSlider numElements;
+	private int maxNumElements = 100, minNumElements = 20;
+	
 	public HeapSort()
 	{
 		super("Heap Sort", true, true, true, true);
-		setBounds(400, 400, 400, 400);
-		
-		rand = new Random();
-		numsToSort = generateRandomArray(arraySize);
-		
+		setBounds(400, 400, 450, 400);
+		setMinimumSize(new Dimension(450, 200));
+
 		mutex = new ReentrantLock();
 		executor = Executors.newFixedThreadPool(1);
 		
+		rand = new Random();
+		numsToSort = generateRandomArray(arraySize);
 		currentIndex = -1; //Before the sort has started, we don't want any of the elements colored red
+		
+		speed = new JSlider(minSpeed, maxSpeed, sleepTime);
+		speed.setBorder(new TitledBorder("Speed"));
+		speed.addChangeListener(this);
+		numElements = new JSlider(minNumElements, maxNumElements, arraySize);
+		numElements.setBorder(new TitledBorder("Number of Elements"));
+		numElements.addChangeListener(this);
+		sliderContainer = new JPanel();
+		sliderContainer.add(speed);
+		sliderContainer.add(numElements);
+		add(sliderContainer, BorderLayout.SOUTH);
 	}
 	
 	public void start()
@@ -128,7 +146,7 @@ public class HeapSort extends JInternalFrame implements Runnable
 		for (int i = 0; i < numsToSort.length - 1; i++)
 		{
 			width = getWidth()/(numsToSort.length - 1);
-			height = getHeight() - getInsets().top; 
+			height = getHeight() - getInsets().top - sliderContainer.getHeight(); 
 			
 			g.setColor(Color.BLUE);
 			if (i == currentIndex)
@@ -137,5 +155,18 @@ public class HeapSort extends JInternalFrame implements Runnable
 			}
 			g.fillRect(getInsets().left + width*i, height - numsToSort[i]*(height/numsToSort.length), width, numsToSort[i]*(height/numsToSort.length));
 		}
+	}
+	
+	public void stateChanged(ChangeEvent e)
+	{
+		if (e.getSource() == speed)
+		{
+			sleepTime = maxSpeed - speed.getValue();
+		}
+		else if (e.getSource() == numElements)
+		{
+			//???
+		}
+		repaint();
 	}
 }

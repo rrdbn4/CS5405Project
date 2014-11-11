@@ -9,7 +9,7 @@ import javax.swing.*;
 public class HeapSort extends JInternalFrame implements Runnable
 {
 	private int[] numsToSort;
-	private final int arraySize = 35;
+	private final int arraySize = 50;
 	private int heapSize;
 	
 	Executor executor;
@@ -122,14 +122,18 @@ public class HeapSort extends JInternalFrame implements Runnable
 	{
 		super.paint(g);
 		
+		int width, height;
 		for (int i = 0; i < numsToSort.length - 1; i++)
 		{
+			width = getWidth()/(numsToSort.length - 1);
+			height = getHeight() - getInsets().top; 
+			
 			g.setColor(Color.BLUE);
 			if (i == currentIndex)
 			{
 				g.setColor(Color.RED);
 			}
-			g.fillRect(5 + 5*i, 395 - numsToSort[i]*10 , 5, numsToSort[i]*10);
+			g.fillRect(getInsets().left + width*i, height - numsToSort[i]*(height/numsToSort.length), width, numsToSort[i]*(height/numsToSort.length));
 		}
 	}
 }

@@ -35,6 +35,7 @@ public class QuickThread implements Runnable
 		resumed=true;
 		pause=false;
 		executor.execute(this);
+		int[] data=null;
   	}
 	
 	public void stop()
@@ -89,13 +90,14 @@ public class QuickThread implements Runnable
    executor.shutdownNow();
   }
 
-  public String output()
+  public int[] getData()
   {
     //System.out.println("output()");
-    string="";
+    /*string="";
 	for(int i=0;i<size;i++)
 	  string+=data[i]+" ";
-	return string;
+	return string;*/
+	return data;
 
   }
 

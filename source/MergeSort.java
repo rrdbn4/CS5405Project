@@ -45,6 +45,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, Runnabl
 		setVisible(true);
 		setOpaque(true);
         mThread=new MergeThread();
+		pause=false;
 		
   	}
 
@@ -52,11 +53,23 @@ public class MergeSort extends JInternalFrame implements ActionListener, Runnabl
   {
     if(event.getSource()==startButton)
 	{
+	  mThread.stop();
+	  mThread= new MergeThread();
 	  mThread.start();
 	}
 	else if(event.getSource()==pauseButton)
 	{
-	  mThread.pause();
+	  pause=!pause;
+	  if(pause==true)
+	  {
+	    pauseButton.setText("Unpause");
+	    mThread.pause();
+	  }
+	  if(pause==false)
+	  {
+	    pauseButton.setText("Pause");
+		mThread.unpause();
+	  }
 	}
 	else if(event.getSource()==stop)
 	{

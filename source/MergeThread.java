@@ -35,6 +35,7 @@ public class MergeThread implements Runnable
 		resumed=true;
 		pause=false;
 		executor.execute(this);
+		data = null;
   	}
 	
 	public void stop()
@@ -50,15 +51,15 @@ public class MergeThread implements Runnable
 	public void unpause()
 	{
 	  pause=false;
-	  System.out.println("unpause");
+	  //System.out.println("unpause");
 	  lock.lock();
       condition.signal();
 	  lock.unlock();
 	}
 
-  	public void start()
+  	public void start(int length)
 	{	        
-	    size=10;
+	    size=length;
 		data = new int[size];
 		Random num= new Random();
 		for(int i=0;i<size;i++)
@@ -89,13 +90,15 @@ public class MergeThread implements Runnable
    executor.shutdownNow();
   }
 
-  public String output()
+  public int[] getData()
   {
     //System.out.println("output()");
+	/*
     string="";
 	for(int i=0;i<size;i++)
 	  string+=data[i]+" ";
-	return string;
+	return string;*/
+	return data;
 
   }
 
@@ -104,7 +107,7 @@ public class MergeThread implements Runnable
     if(pause==true)
 	{
 	  lock.lock();  
-	  System.out.println("pause");
+	  //System.out.println("pause");
 	  try
 	  {
   	  condition.await();

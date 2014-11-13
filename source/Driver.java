@@ -17,6 +17,8 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	private HeapSort hs;
 	private BubbleSort bs;  //bs is a pretty fitting variable name
 	private ShellSort shs;
+	private MergeSort ms;
+	private QuickSort qs;
 	
 	private int sleepTime = 50;
 	private final int arraySize = 50;
@@ -93,6 +95,29 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			shs.setVisible(true);
 			shs.toFront();
 		}
+		else if (e.getSource() == mergeSortMenuItem)
+		{
+			if (ms == null || ms.isClosed() == true)
+			{ 
+				ms = new MergeSort();
+				desktop.add(ms);
+				
+			}
+			ms.setVisible(true);
+			ms.toFront();
+		}
+		else if (e.getSource() == quickSortMenuItem)
+		{
+			if (qs == null || qs.isClosed() == true)
+			{ 
+				qs = new QuickSort();
+				desktop.add(qs);
+				
+			}
+			qs.setVisible(true);
+			qs.toFront();
+			//ms.start();
+		}		
 	}
 	
 	private JMenuBar setupMenuBar()

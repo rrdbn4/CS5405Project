@@ -40,23 +40,20 @@ public class MergeThread implements Runnable
 	public void stop()
 	{
 	  resumed=false;
-	  executor.shutdownNow();
 	}
 	
 	public void pause()
 	{
-	
-	  //need to change to lock
-	  while(pause==true)
-	  {
-	 try {Thread.sleep(10);}
-      catch (InterruptedException ex){}
-	  }	  
+      pause=true;
 	}
 	
 	public void unpause()
 	{
-      pause=false;
+	  pause=false;
+	  System.out.println("unpause");
+	  lock.lock();
+      condition.signal();
+	  lock.unlock();
 	}
 
   	public void start()
@@ -104,6 +101,21 @@ public class MergeThread implements Runnable
 
   void merge(int p, int q, int r)
   {
+    if(pause==true)
+	{
+	  lock.lock();  
+	  System.out.println("pause");
+	  try
+	  {
+  	  condition.await();
+	   }
+	   catch(InterruptedException ex) {}
+	   lock.unlock();
+	}
+  
+  
+    if(resumed==true)
+	{
     int left=q-p+1;
 	int right=r-q;
 	int L[]= new int[left+2];
@@ -134,6 +146,7 @@ public class MergeThread implements Runnable
 		b++;
 	  }
 	}
+	}
      try 
 	  {Thread.sleep(1000);}
       catch (InterruptedException ex){}
@@ -142,13 +155,16 @@ public class MergeThread implements Runnable
   
   void mSort(int p, int r)
   {
-    int q; //midpoint
-	if(r>p)
+    if(resumed==true)
 	{
-	  q=(r+p)/2;
-	  mSort(p,q);
-	  mSort(q+1,r);
-	  merge(p,q,r);
+      int q; //midpoint
+  	  if(r>p)
+      {
+	    q=(r+p)/2;
+	    mSort(p,q);
+	    mSort(q+1,r);
+	    merge(p,q,r);
+	  }
 	}
   }
 

@@ -46,7 +46,7 @@ public class QuickSort extends JInternalFrame implements ActionListener, Runnabl
 		setOpaque(true);
         qThread=new QuickThread();
 		pause=false;
-		
+		size=10;
   	}
 
   public void actionPerformed(ActionEvent event)
@@ -55,7 +55,7 @@ public class QuickSort extends JInternalFrame implements ActionListener, Runnabl
 	{
 	  qThread.stop();
 	  qThread= new QuickThread();
-	  qThread.start(10);
+	  qThread.start(size);
 	}
 	else if(event.getSource()==pauseButton)
 	{
@@ -80,9 +80,19 @@ public class QuickSort extends JInternalFrame implements ActionListener, Runnabl
   public void paint(Graphics g)
   {
  	super.paint(g);
-    string=qThread.output();
-	//System.out.println(string);
-	g.drawString(string,100,100);
+    int[] data=qThread.getData();
+	if(data!=null)
+	{
+	int offset=0;
+	int x=10;
+	int y=200;
+	int width=(getWidth()-20)/size;
+	for(int i=0;i<data.length;i++)
+	{
+	  g.drawRect(x+offset,y,width,-data[i]);
+	  offset+=width;
+	}
+	}
     
   }
   

@@ -41,6 +41,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, Runnabl
 		add(pauseButton);
 		executor = Executors.newFixedThreadPool(1);
 		executor.execute(this);
+        size=10;
 		setSize(400,400);
 		setVisible(true);
 		setOpaque(true);
@@ -55,7 +56,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, Runnabl
 	{
 	  mThread.stop();
 	  mThread= new MergeThread();
-	  mThread.start();
+	  mThread.start(size);
 	}
 	else if(event.getSource()==pauseButton)
 	{
@@ -80,9 +81,20 @@ public class MergeSort extends JInternalFrame implements ActionListener, Runnabl
   public void paint(Graphics g)
   {
  	super.paint(g);
-    string=mThread.output();
-	//System.out.println(string);
-	g.drawString(string,100,100);
+    int[] data=mThread.getData();
+	if(data!=null)
+	{
+	int offset=0;
+	int x=10;
+	int y=200;
+	int width=(getWidth()-20)/size;
+	for(int i=0;i<data.length;i++)
+	{
+	  g.drawRect(x+offset,y,width,-data[i]);
+	  offset+=width;
+	}
+	}
+	//g.drawString(string,100,100);
     
   }
   

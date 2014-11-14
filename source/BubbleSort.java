@@ -21,7 +21,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 	boolean isPaused = false;
 
 	JPanel container;
-	JButton startStop, pauseResume;
+	JButton restart, pauseResume;
 	JSlider speedSlider, numElSlider;
 
 	Lock lock = new ReentrantLock();
@@ -33,7 +33,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		setBounds(0, 0, 500, 400);
 		setLayout(new BorderLayout());
 
-		startStop = new JButton("Start / Stop");
+		restart = new JButton("Restart");
 		pauseResume = new JButton("Pause / Resume");
 		pauseResume.addActionListener(this);
 		speedSlider = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
@@ -129,6 +129,11 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		lock.unlock();
 	}
 
+	public void restart()
+	{
+		//too implement
+	}
+
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getSource() == pauseResume)
@@ -137,6 +142,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 				resume();
 			else
 				pause();
+		}
+		else
+		{
+
 		}
 	}
 

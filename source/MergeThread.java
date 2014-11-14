@@ -19,6 +19,7 @@ public class MergeThread implements Runnable
   private boolean listChange=false;
   int size;
   boolean pause;
+  int delay;
   private final ExecutorService executor;
   String string;
   JButton startButton;
@@ -36,6 +37,7 @@ public class MergeThread implements Runnable
 		pause=false;
 		executor.execute(this);
 		data = null;
+		delay=1000;
   	}
 	
 	public void stop()
@@ -46,6 +48,11 @@ public class MergeThread implements Runnable
 	public void pause()
 	{
       pause=true;
+	}
+	
+	public void setDelay(int time)
+	{
+	  delay=time;
 	}
 	
 	public void unpause()
@@ -151,7 +158,7 @@ public class MergeThread implements Runnable
 	}
 	}
      try 
-	  {Thread.sleep(1000);}
+	  {Thread.sleep(delay);}
       catch (InterruptedException ex){}
 
   }

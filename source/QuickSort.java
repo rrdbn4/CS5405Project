@@ -1,3 +1,5 @@
+package code;
+
 //Holly Busken
 import javax.swing.*;
 import java.awt.*;

@@ -1,3 +1,4 @@
+package code;
 //Global singleton for thread control
 public class Control 
 {

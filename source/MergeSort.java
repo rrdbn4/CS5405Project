@@ -1,6 +1,4 @@
 package code;
-
-//Holly Busken
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -18,6 +16,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 
   private boolean resumed = false;
   int size;
+  int delay;
   boolean pause;
   String string;
   JButton startButton;
@@ -59,7 +58,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 		JPanel delayPanel=new JPanel();		
 		JLabel delayLabel= new JLabel("Slide for the Speed of Sorting");
 		delayPanel.add(delayLabel);
-		delaySelector= new JSlider(10,5000,1000);
+		delaySelector= new JSlider(1,2000,1000);
 		delaySelector.setMajorTickSpacing(500);
 		delaySelector.setPaintTicks(true);
 		delaySelector.setPaintLabels(true);
@@ -75,7 +74,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 		setOpaque(true);
         mThread=new MergeThread();
 		pause=false;
-		
+		delay=1000;
   	}
 	
   public void stateChanged(ChangeEvent event)
@@ -87,8 +86,8 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	}
 	if(event.getSource()==delaySelector)
 	{
-      int x = delaySelector.getValue();
-	  mThread.setDelay(x);
+      delay = delaySelector.getValue();
+	  mThread.setDelay(delay);
 	}
 	
   }
@@ -99,7 +98,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	{
 	  mThread.stop();
 	  mThread= new MergeThread();
-	  mThread.start(size);
+	  mThread.start(size,delay);
 	}
 	else if(event.getSource()==pauseButton)
 	{
@@ -129,16 +128,14 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	{
 	int offset=0;
 	int x=10;
-	int y=200;
+	int y=500;
 	int width=(getWidth()-20)/size;
 	for(int i=0;i<data.length;i++)
 	{
-	  g.drawRect(x+offset,y,width,-data[i]);
+	  g.drawRect(x+offset,y-data[i],width,data[i]);
 	  offset+=width;
 	}
-	}
-	//g.drawString(string,100,100);
-    
+	}    
   }
   
   public void run()
@@ -148,7 +145,9 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	  repaint();
 	  	  try {Thread.sleep(10);}
       catch (InterruptedException ex){}
+	  
 	 }
+
 	 executor.shutdownNow();
   }
 

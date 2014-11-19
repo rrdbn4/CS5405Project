@@ -1,6 +1,4 @@
 package code;
-
-//Holly Busken
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,6 +18,7 @@ public class QuickThread implements Runnable
   private int[] data;
   private boolean listChange=false;
   int size;
+  int delay;
   boolean pause;
   private final ExecutorService executor;
   String string;
@@ -59,7 +58,12 @@ public class QuickThread implements Runnable
 	  lock.unlock();
 	}
 
-  	public void start(int length)
+	public void setDelay(int time)
+	{
+	  delay=time;
+	}	
+
+  	public void start(int length, int d)
 	{	        
 	    size=length;
 		data = new int[size];
@@ -70,7 +74,8 @@ public class QuickThread implements Runnable
 		}
 		resumed = true;
 	    start=true;	
-        pause=false;		
+        pause=false;
+        delay=d;		
 	}
 	
 	
@@ -139,7 +144,7 @@ public class QuickThread implements Runnable
 	data[right]=holdValue;
 	}
      try 
-	  {Thread.sleep(1000);}
+	  {Thread.sleep(delay);}
       catch (InterruptedException ex){}
     return storeIndex;
   }

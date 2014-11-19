@@ -1,6 +1,4 @@
 package code;
-
-//Holly Busken
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -39,7 +37,6 @@ public class MergeThread implements Runnable
 		pause=false;
 		executor.execute(this);
 		data = null;
-		delay=1000;
   	}
 	
 	public void stop()
@@ -66,9 +63,10 @@ public class MergeThread implements Runnable
 	  lock.unlock();
 	}
 
-  	public void start(int length)
+  	public void start(int length, int d)
 	{	        
 	    size=length;
+		delay=d;
 		data = new int[size];
 		Random num= new Random();
 		for(int i=0;i<size;i++)

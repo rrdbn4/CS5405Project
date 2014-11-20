@@ -44,7 +44,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		numElSlider.addChangeListener(this);
 
 		container = new JPanel();
-		container.add(startStop);
+		// container.add(startStop);
 		container.add(pauseResume);
 		container.add(speedSlider);
 		container.add(numElSlider);

@@ -136,7 +136,7 @@ public class QuickSort extends JInternalFrame implements ActionListener, ChangeL
 	int width=(getWidth()-20)/size;
 	for(int i=0;i<data.length;i++)
 	{
-	  g.drawRect(x+offset,y-data[i],width,data[i]);
+	  g.fillRect(x+offset,y-data[i],width,data[i]);
 	  offset+=width;
 	}
 	}

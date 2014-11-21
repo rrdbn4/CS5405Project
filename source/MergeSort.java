@@ -46,10 +46,9 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 		JPanel sizePanel=new JPanel();		
 		JLabel sizeLabel= new JLabel("Slide for Number of Elements to Sort");
 		sizePanel.add(sizeLabel);
-		sizeSelector= new JSlider(5,605,10);
+		sizeSelector= new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS,10);
 		sizeSelector.setMajorTickSpacing(100);
 		sizeSelector.setPaintTicks(true);
-		sizeSelector.setPaintLabels(true);
 		sizeSelector.addChangeListener(this);
 		sizePanel.add(sizeSelector);
 		sizePanel.setLayout(new BoxLayout(sizePanel, BoxLayout.PAGE_AXIS));
@@ -58,10 +57,9 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 		JPanel delayPanel=new JPanel();		
 		JLabel delayLabel= new JLabel("Slide for the Speed of Sorting");
 		delayPanel.add(delayLabel);
-		delaySelector= new JSlider(1,2000,1000);
-		delaySelector.setMajorTickSpacing(500);
+		delaySelector= new JSlider(Control.MIN_SPEED, Control.MAX_SPEED,300);
+		delaySelector.setMajorTickSpacing(100);
 		delaySelector.setPaintTicks(true);
-		delaySelector.setPaintLabels(true);
 		delaySelector.addChangeListener(this);
 		sizePanel.add(delaySelector);
 		delayPanel.setLayout(new BoxLayout(delayPanel, BoxLayout.PAGE_AXIS));
@@ -86,7 +84,7 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	}
 	if(event.getSource()==delaySelector)
 	{
-      delay = delaySelector.getValue();
+      delay = Control.MAX_SPEED - delaySelector.getValue();
 	  mThread.setDelay(delay);
 	}
 	
@@ -119,7 +117,31 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	  mThread.stop();
 	}
   }
+  
+  public void universalStart()
+  {
+    mThread.start(size,delay);
+  }
+  
+  public void universalStop()
+  {
+    mThread.stop();
+  }
 
+  public void universalPause()
+  {
+	  pause=!pause;
+	  if(pause==true)
+	  {
+	    pauseButton.setText("Unpause");
+	    mThread.pause();
+	  }
+	  if(pause==false)
+	  {
+	    pauseButton.setText("Pause");
+		mThread.unpause();
+	  }  
+  }
   public void paint(Graphics g)
   {
  	super.paint(g);
@@ -132,6 +154,12 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	int width=(getWidth()-20)/size;
 	for(int i=0;i<data.length;i++)
 	{
+	  if(mThread.isFinished()==true)
+	    g.setColor(Color.GREEN);
+	  else if(i==mThread.getHighlight())
+	    g.setColor(Color.RED);
+	  else
+	    g.setColor(Color.BLUE);
 	  g.fillRect(x+offset,y-data[i],width,data[i]);
 	  offset+=width;
 	}

@@ -20,6 +20,7 @@ public class MergeThread implements Runnable
   int size;
   boolean pause;
   int delay;
+  int highlight=-1;
   private final ExecutorService executor;
   String string;
   JButton startButton;
@@ -28,6 +29,7 @@ public class MergeThread implements Runnable
   public Lock lock=new ReentrantLock();
   public Condition condition=lock.newCondition();
   boolean start=false;
+  boolean done=false;
   
 
   	public MergeThread()
@@ -38,6 +40,16 @@ public class MergeThread implements Runnable
 		executor.execute(this);
 		data = null;
   	}
+	
+	public int getHighlight()
+	{
+	  return highlight;
+	}
+	
+	public boolean isFinished()
+	{
+	  return done;
+	}
 	
 	public void stop()
 	{
@@ -75,7 +87,8 @@ public class MergeThread implements Runnable
 		}
 		resumed = true;
 	    start=true;	
-        pause=false;		
+        pause=false;	
+		done=false;
 	}
 	
 	
@@ -148,6 +161,7 @@ public class MergeThread implements Runnable
 	  if(L[a]<=R[b])
 	  {
 	    data[k]=L[a];
+		highlight=k;
 		a++;
 	  }
 	  else
@@ -175,6 +189,8 @@ public class MergeThread implements Runnable
 	    mSort(q+1,r);
 	    merge(p,q,r);
 	  }
+	  if(p==0 && r==(data.length-1))
+	    done=true;
 	}
   }
 

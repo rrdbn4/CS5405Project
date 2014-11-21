@@ -54,7 +54,80 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	{
 	    if(e.getSource() instanceof JCheckBox)
 		{
+		  //need to have a code in here for putting the same array in all 
+		  if(bubbleSortItem.isSelected())
+		  {
+		  	if (bs == null || bs.isClosed())		
+			{		
+				bs = new BubbleSort();		
+				desktop.add(bs);  //add bs to the desktop		
+				bs.start();		
+			}		
+			bs.setVisible(true);		
+			bs.toFront();	
+		  }
+		  
+		  if(selectionSortItem.isSelected())
+		  {
+			if (ss == null || ss.isClosed())
+			{ 
+				ss = new SelectionSort();
+				desktop.add(ss);
+				ss.start();
+			}
+			ss.setVisible(true);
+			ss.toFront();		  
+		  }
+		  
+		  if(mergeSortItem.isSelected())
+		  {
+			if (ms == null || ms.isClosed() == true)
+			{ 
+				ms = new MergeSort();
+				desktop.add(ms);
+				
+			}
+			ms.setVisible(true);
+			ms.toFront();		  
+		  }
+		  
+		  if(quickSortItem.isSelected())
+		  {
+			if (qs == null || qs.isClosed() == true)
+			{ 
+				qs = new QuickSort();
+				desktop.add(qs);
+				
+			}
+			qs.setVisible(true);
+			qs.toFront();		  
+		  }
+		  
+		  if(heapSortItem.isSelected())
+		  {
+			if (hs == null || hs.isClosed())
+			{ 
+				hs = new HeapSort();
+				desktop.add(hs);
+				hs.start();
+			}
+			hs.setVisible(true);
+			hs.toFront();		  
+		  }
+		  
+		  if(shellSortItem.isSelected())
+		  {
+			if (shs == null || shs.isClosed())
+			{
+				shs = new ShellSort();
+				desktop.add(shs);  //add bs to the desktop
+				shs.start();
+			}
+			shs.setVisible(true);
+			shs.toFront();		  
+		  }
 		}
+		
 		if (e.getSource() == selectionSortMenuItem)
 		{
 			if (ss == null || ss.isClosed())
@@ -120,7 +193,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			}
 			qs.setVisible(true);
 			qs.toFront();
-			//ms.start();
 		}		
 	}
 	

@@ -12,6 +12,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 {
 	private JDesktopPane desktop = new JDesktopPane();
 	private JMenuItem author, problemDescription, help, references, bubbleSortMenuItem, selectionSortMenuItem, mergeSortMenuItem, quickSortMenuItem, heapSortMenuItem, shellSortMenuItem;
+	private JCheckBox bubbleSortItem, selectionSortItem, mergeSortItem, quickSortItem, heapSortItem, shellSortItem;
 	
 	private SelectionSort ss;
 	private HeapSort hs;
@@ -51,6 +52,9 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 
 	public void actionPerformed(ActionEvent e)
 	{
+	    if(e.getSource() instanceof JCheckBox)
+		{
+		}
 		if (e.getSource() == selectionSortMenuItem)
 		{
 			if (ss == null || ss.isClosed())
@@ -159,6 +163,27 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		demosMenu.add(shellSortMenuItem);
 		
 		JMenu multiTaskingMenu = new JMenu("MultiTasking");
+		bubbleSortItem = new JCheckBox("Bubble Sort",false);
+		selectionSortItem = new JCheckBox("Selection Sort",false);
+		mergeSortItem = new JCheckBox("Merge Sort",false);
+		quickSortItem = new JCheckBox("Quick Sort",false);
+		heapSortItem = new JCheckBox("Heap Sort",false);
+		shellSortItem = new JCheckBox("Shell Sort",false);
+		
+		multiTaskingMenu.add(bubbleSortItem);		
+		multiTaskingMenu.add(selectionSortItem);		
+		multiTaskingMenu.add(mergeSortItem);		
+		multiTaskingMenu.add(quickSortItem);		
+		multiTaskingMenu.add(heapSortItem);		
+		multiTaskingMenu.add(shellSortItem);
+		
+		bubbleSortItem.addActionListener(this);
+		selectionSortItem.addActionListener(this);
+		mergeSortItem.addActionListener(this);
+		quickSortItem.addActionListener(this);
+		heapSortItem.addActionListener(this);
+		shellSortItem.addActionListener(this);
+		
 		//num elements slider
 		//speed slider
 		//start/stop button group?

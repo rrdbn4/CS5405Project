@@ -23,7 +23,10 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	
 	private int sleepTime = Control.DEFAULT_SPEED;
 	private final int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
-	private JPanel sliderContainer;
+	
+	private JPanel container;
+	private JButton startStop;
+	private JButton pauseResume;
 	private JSlider speed;
 	private JSlider numElements;
 
@@ -35,16 +38,22 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		setJMenuBar(setupMenuBar());
 		add(desktop);
 		
+		startStop = new JButton("Start");
+		startStop.addActionListener(this);
+		pauseResume = new JButton("Pause");
+		pauseResume.addActionListener(this);
 		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
 		speed.setBorder(new TitledBorder("Speed"));
 		speed.addChangeListener(this);
 		numElements = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, Control.DEFUALT_NUM_OF_ELEMENTS);
 		numElements.setBorder(new TitledBorder("Number of Elements"));
 		numElements.addChangeListener(this);
-		sliderContainer = new JPanel();
-		sliderContainer.add(speed);
-		sliderContainer.add(numElements);
-		add(sliderContainer, BorderLayout.SOUTH);
+		container = new JPanel();
+		container.add(startStop);
+		container.add(pauseResume);
+		container.add(speed);
+		container.add(numElements);
+		add(container, BorderLayout.SOUTH);
 		setVisible(true);
 	}
 
@@ -64,7 +73,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			bs.setVisible(true);		
 			bs.toFront();	
 		  }
-		  
 		  if(selectionSortItem.isSelected())
 		  {
 			if (ss == null || ss.isClosed())
@@ -76,7 +84,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			ss.setVisible(true);
 			ss.toFront();		  
 		  }
-		  
 		  if(mergeSortItem.isSelected())
 		  {
 			if (ms == null || ms.isClosed() == true)
@@ -88,7 +95,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			ms.setVisible(true);
 			ms.toFront();		  
 		  }
-		  
 		  if(quickSortItem.isSelected())
 		  {
 			if (qs == null || qs.isClosed() == true)
@@ -100,7 +106,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			qs.setVisible(true);
 			qs.toFront();		  
 		  }
-		  
 		  if(heapSortItem.isSelected())
 		  {
 			if (hs == null || hs.isClosed())
@@ -112,7 +117,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			hs.setVisible(true);
 			hs.toFront();		  
 		  }
-		  
 		  if(shellSortItem.isSelected())
 		  {
 			if (shs == null || shs.isClosed())
@@ -125,73 +129,86 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			shs.toFront();		  
 		  }
 		}
-		
-		if (e.getSource() == selectionSortMenuItem)
+		else if (e.getSource()  instanceof JMenuItem)
 		{
-			if (ss == null || ss.isClosed())
-			{ 
-				ss = new SelectionSort();
-				desktop.add(ss);
-				ss.start();
-			}
-			ss.setVisible(true);
-			ss.toFront();
-		}
-		else if (e.getSource() == heapSortMenuItem)
-		{
-			if (hs == null || hs.isClosed())
-			{ 
-				hs = new HeapSort();
-				desktop.add(hs);
-				hs.start();
-			}
-			hs.setVisible(true);
-			hs.toFront();
-		}
-		else if (e.getSource() == bubbleSortMenuItem)		
-		{		
-			if (bs == null || bs.isClosed())		
-			{		
-				bs = new BubbleSort();		
-				desktop.add(bs);  //add bs to the desktop		
-				bs.start();		
-			}		
-			bs.setVisible(true);		
-			bs.toFront();		
-		}
-		else if (e.getSource() == shellSortMenuItem)
-		{
-			if (shs == null || shs.isClosed())
+			if (e.getSource() == selectionSortMenuItem)
 			{
-				shs = new ShellSort();
-				desktop.add(shs);  //add bs to the desktop
-				shs.start();
+				if (ss == null || ss.isClosed())
+				{ 
+					ss = new SelectionSort();
+					desktop.add(ss);
+					ss.start();
+				}
+				ss.setVisible(true);
+				ss.toFront();
 			}
-			shs.setVisible(true);
-			shs.toFront();
+			else if (e.getSource() == heapSortMenuItem)
+			{
+				if (hs == null || hs.isClosed())
+				{ 
+					hs = new HeapSort();
+					desktop.add(hs);
+					hs.start();
+				}
+				hs.setVisible(true);
+				hs.toFront();
+			}
+			else if (e.getSource() == bubbleSortMenuItem)		
+			{		
+				if (bs == null || bs.isClosed())		
+				{		
+					bs = new BubbleSort();		
+					desktop.add(bs);  //add bs to the desktop		
+					bs.start();		
+				}		
+				bs.setVisible(true);		
+				bs.toFront();		
+			}
+			else if (e.getSource() == shellSortMenuItem)
+			{
+				if (shs == null || shs.isClosed())
+				{
+					shs = new ShellSort();
+					desktop.add(shs);  //add bs to the desktop
+					shs.start();
+				}
+				shs.setVisible(true);
+				shs.toFront();
+			}
+			else if (e.getSource() == mergeSortMenuItem)
+			{
+				if (ms == null || ms.isClosed() == true)
+				{ 
+					ms = new MergeSort();
+					desktop.add(ms);
+					
+				}
+				ms.setVisible(true);
+				ms.toFront();
+			}
+			else if (e.getSource() == quickSortMenuItem)
+			{
+				if (qs == null || qs.isClosed() == true)
+				{ 
+					qs = new QuickSort();
+					desktop.add(qs);
+					
+				}
+				qs.setVisible(true);
+				qs.toFront();
+			}
 		}
-		else if (e.getSource() == mergeSortMenuItem)
+		else if (e.getSource()  instanceof JButton)
 		{
-			if (ms == null || ms.isClosed() == true)
-			{ 
-				ms = new MergeSort();
-				desktop.add(ms);
+			if (e.getSource() == startStop)
+			{
 				
 			}
-			ms.setVisible(true);
-			ms.toFront();
-		}
-		else if (e.getSource() == quickSortMenuItem)
-		{
-			if (qs == null || qs.isClosed() == true)
-			{ 
-				qs = new QuickSort();
-				desktop.add(qs);
-				
+			else if (e.getSource() == pauseResume)
+			{
+			
 			}
-			qs.setVisible(true);
-			qs.toFront();
-		}		
+		}
 	}
 	
 	private JMenuBar setupMenuBar()

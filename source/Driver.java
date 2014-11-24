@@ -32,7 +32,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	public Driver()
 	{
 		super("Sort");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000,1000);
 		setJMenuBar(setupMenuBar());
 		add(desktop);

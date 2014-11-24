@@ -15,7 +15,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	
 	private SelectionSort ss;
 	private HeapSort hs;
-	private BubbleSort bs;  //bs is a pretty fitting variable name
+	private BubbleSort bs;  
 	private ShellSort shs;
 	private MergeSort ms;
 	private QuickSort qs;
@@ -31,7 +31,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	public Driver()
 	{
 		super("Sort");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000,1000);
 		setJMenuBar(setupMenuBar());
 		add(desktop);

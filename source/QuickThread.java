@@ -28,6 +28,8 @@ public class QuickThread implements Runnable
   public Lock lock=new ReentrantLock();
   public Condition condition=lock.newCondition();
   boolean start=false;
+  int highlight=0;
+  boolean done=false;
   
 
   	public QuickThread()
@@ -38,6 +40,16 @@ public class QuickThread implements Runnable
 		executor.execute(this);
 		int[] data=null;
   	}
+	
+	public int getHighlight()
+	{
+	  return highlight;
+	}
+	
+	public boolean isFinished()
+	{
+	  return done;
+	}
 	
 	public void stop()
 	{
@@ -75,7 +87,8 @@ public class QuickThread implements Runnable
 		resumed = true;
 	    start=true;	
         pause=false;
-        delay=d;		
+        delay=d;	
+	    done=false;
 	}
 	
 	
@@ -136,12 +149,15 @@ public class QuickThread implements Runnable
 	    int holdValue=data[storeIndex];
 		data[storeIndex]=data[i];
 		data[i]=holdValue;
+		highlight=i;
 		storeIndex=storeIndex+1;
 	  }
 	}
 	int holdValue=data[storeIndex];
+	highlight=storeIndex;
 	data[storeIndex]=data[right];
 	data[right]=holdValue;
+	highlight=right;
 	}
      try 
 	  {Thread.sleep(delay);}
@@ -159,6 +175,8 @@ public class QuickThread implements Runnable
 	  qSort(i,p-1);
 	  qSort(p+1,k);
 	}
+	if(i==0 && k==(data.length-1))
+	  done=true;
 	}
   }
 

@@ -13,11 +13,11 @@ import javax.swing.event.*;
 public class SelectionSort extends JInternalFrame implements Runnable, ChangeListener
 {
 	private float[] numsToSort;
-	private int arraySize = 30;
+	private int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
 	
 	Executor executor;
 	private Lock mutex;
-	private int sleepTime = 50;
+	private int sleepTime = Control.DEFAULT_SPEED;
 	
 	private final Random rand;	
 	private int currentIndex;
@@ -40,10 +40,10 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		numsToSort = generateRandomArray(arraySize);
 		currentIndex = -1; //Before the sort has started, we don't want any of the elements colored red
 				
-		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
+		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, Control.DEFAULT_SPEED);
 		speed.setBorder(new TitledBorder("Speed"));
 		speed.addChangeListener(this);
-		numElements = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, arraySize);
+		numElements = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, Control.DEFUALT_NUM_OF_ELEMENTS);
 		numElements.setBorder(new TitledBorder("Number of Elements"));
 		numElements.addChangeListener(this);
 		container = new JPanel();

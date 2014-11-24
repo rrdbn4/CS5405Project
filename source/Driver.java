@@ -16,18 +16,16 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	
 	private SelectionSort ss;
 	private HeapSort hs;
-	private BubbleSort bs;  
+	private BubbleSort bs;
 	private ShellSort shs;
 	private MergeSort ms;
 	private QuickSort qs;
 	
-	private int sleepTime = 50;
-	private final int arraySize = 50;
+	private int sleepTime = Control.DEFAULT_SPEED;
+	private final int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
 	private JPanel sliderContainer;
 	private JSlider speed;
-	private int maxSpeed = 100, minSpeed = 1;
 	private JSlider numElements;
-	private int maxNumElements = 100, minNumElements = 20;
 
 	public Driver()
 	{
@@ -37,10 +35,10 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		setJMenuBar(setupMenuBar());
 		add(desktop);
 		
-		speed = new JSlider(minSpeed, maxSpeed, sleepTime);
+		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
 		speed.setBorder(new TitledBorder("Speed"));
 		speed.addChangeListener(this);
-		numElements = new JSlider(minNumElements, maxNumElements, arraySize);
+		numElements = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, Control.DEFUALT_NUM_OF_ELEMENTS);
 		numElements.setBorder(new TitledBorder("Number of Elements"));
 		numElements.addChangeListener(this);
 		sliderContainer = new JPanel();

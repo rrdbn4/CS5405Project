@@ -11,7 +11,7 @@ import javax.swing.event.*;
 
 public class BubbleSort extends JInternalFrame implements Runnable, ChangeListener, ActionListener
 {
-	Executor executor;
+	ExecutorService executor;
 
 	float[] randArray;
 	int numElements = 30;
@@ -19,9 +19,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 	int highlightIndex = 0;
 	boolean doneSorting = false;
 	boolean isPaused = false;
+  boolean isRunning = true;
 
 	JPanel container;
-	JButton restart, pauseResume;
+	JButton startStop, pauseResume;
 	JSlider speedSlider, numElSlider;
 
 	Lock lock = new ReentrantLock();
@@ -33,10 +34,12 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		setBounds(0, 0, 500, 400);
 		setLayout(new BorderLayout());
 
-		restart = new JButton("Restart");
 		pauseResume = new JButton("Pause / Resume");
 		pauseResume.addActionListener(this);
-		speedSlider = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
+    startStop = new JButton("Start / Stop");
+    startStop.addActionListener(this);
+
+    speedSlider = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
 		speedSlider.setBorder(new TitledBorder("Speed"));
 		speedSlider.addChangeListener(this);
 		numElSlider = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, numElements);
@@ -44,20 +47,12 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		numElSlider.addChangeListener(this);
 
 		container = new JPanel();
-		// container.add(startStop);
+    container.setLayout(new GridLayout(1, 4));
+		container.add(startStop);
 		container.add(pauseResume);
 		container.add(speedSlider);
 		container.add(numElSlider);
 		add(container, BorderLayout.SOUTH);
-
-		randArray = new float[numElements];
-		for(int i = 0; i < numElements; i++)
-			randArray[i] = (i+1) * (1.0f / (float)numElements);
-
-		//randomize elements in the array so we have something to sort
-		Random rand = new Random();
-		for(int i = 0; i < numElements*2; i++)
-			swap(rand.nextInt(randArray.length), rand.nextInt(randArray.length));
 
 		executor = Executors.newFixedThreadPool(1);
 	}
@@ -81,10 +76,18 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 	public void run()
 	{
 		doneSorting = false;
+    isPaused = false;
+    isRunning = true;
 		for(int i = 0; i < randArray.length; i++)
 		{
 			for(int j = 0; j < randArray.length - i - 1; j++)
 			{
+        if(!isRunning)  //break out of loop
+        {
+          j = 9999999;
+          i = 9999999;
+          break;
+        }
 				if(isPaused)
 				{
 					lock.lock();
@@ -105,34 +108,57 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 				repaint();
 			}
 		}
-		doneSorting = true;
-		repaint();
+    if(isRunning) //only show as done if it wasn't killed
+    {
+  		doneSorting = true;
+  		repaint();
+    }
 	}
 
 	public void start()
 	{
+    randArray = new float[numElements];
+    for(int i = 0; i < numElements; i++)
+      randArray[i] = (i+1) * (1.0f / (float)numElements);
+
+    //randomize elements in the array so we have something to sort
+    Random rand = new Random();
+    for(int i = 0; i < numElements*2; i++)
+      swap(rand.nextInt(randArray.length), rand.nextInt(randArray.length));
+    isRunning = true;
 		executor.execute(this);
 	}
 
+  public void stop()
+  {
+    isRunning = false;
+    isPaused = false;
+  }
+
 	public void pause()
 	{
-		System.out.println("pause");
-		isPaused = true;
+    if(isRunning)
+		  isPaused = true;
 	}
 
 	public void resume()
-	{
-		System.out.println("resume");
-		isPaused = false;
-		lock.lock();  
-		condition.signal();
-		lock.unlock();
+  {
+    if(isRunning)
+    {
+  		isPaused = false;
+  		lock.lock();  
+  		condition.signal();
+  		lock.unlock();
+    }
 	}
 
-	public void restart()
-	{
-		//too implement
-	}
+  public void setNumberOfElements(int numEl)
+  {
+    if(isRunning)
+      stop();
+    numElements = numEl;
+    start();
+  }
 
 	public void actionPerformed(ActionEvent e)
 	{
@@ -143,9 +169,12 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 			else
 				pause();
 		}
-		else
+		else if(e.getSource() == startStop)
 		{
-
+      if(isRunning)
+        stop();
+      else
+        start();
 		}
 	}
 
@@ -157,7 +186,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		}
 		else
 		{
-			//numElements
+			setNumberOfElements(numElSlider.getValue());
 		}
 	}
 

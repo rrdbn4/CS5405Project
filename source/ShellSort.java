@@ -12,7 +12,7 @@ import javax.swing.event.*;
 
 public class ShellSort extends JInternalFrame implements Runnable, ChangeListener, ActionListener
 {
-	Executor executor;
+	ExecutorService executor;
 
 	float[] randArray;
 	int numElements = 30;
@@ -34,9 +34,11 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 		setBounds(0, 0, 500, 400);
 		setLayout(new BorderLayout());
 
-		startStop = new JButton("Start / Stop");
 		pauseResume = new JButton("Pause / Resume");
-		pauseResume.addActionListener(this);
+    pauseResume.addActionListener(this);
+    startStop = new JButton("Start / Stop");
+    startStop.addActionListener(this);
+
 		speedSlider = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
 		speedSlider.setBorder(new TitledBorder("Speed"));
 		speedSlider.addChangeListener(this);
@@ -45,11 +47,12 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 		numElSlider.addChangeListener(this);
 
 		container = new JPanel();
-		container.add(startStop);
-		container.add(pauseResume);
-		container.add(speedSlider);
-		container.add(numElSlider);
-		add(container, BorderLayout.SOUTH);
+    container.setLayout(new GridLayout(1, 4));
+    container.add(startStop);
+    container.add(pauseResume);
+    container.add(speedSlider);
+    container.add(numElSlider);
+    add(container, BorderLayout.SOUTH);
 
 		randArray = new float[numElements];
 		for(int i = 0; i < numElements; i++)

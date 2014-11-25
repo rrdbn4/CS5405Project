@@ -1,6 +1,8 @@
 package code;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
@@ -9,7 +11,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
-public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
+public class HeapSort extends JInternalFrame implements Runnable, ChangeListener, ActionListener
 {
 	private float[] numsToSort;
 	private int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
@@ -20,12 +22,13 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	private int sleepTime = Control.DEFAULT_SPEED;
 	
 	private final Random rand;
+	private final Condition condition;
 	private int currentIndex;
-	private boolean doneSorting;
+	private boolean doneSorting, isPaused, isRunning;
 	
 	private JPanel container;
-	private JSlider speed;
-	private JSlider numElements;
+	private JButton startStop, pauseResume;
+	private JSlider speed, numElements;
 	
 	public HeapSort()
 	{
@@ -34,12 +37,17 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		setMinimumSize(new Dimension(450, 200));
 
 		mutex = new ReentrantLock();
+		condition = mutex.newCondition();
 		executor = Executors.newFixedThreadPool(1);
 		
 		rand = new Random();
 		numsToSort = generateRandomArray(arraySize);
 		currentIndex = -1; //Before the sort has started, we don't want any of the elements colored red
 		
+		startStop = new JButton("Start");
+		startStop.addActionListener(this);
+		pauseResume = new JButton("Pause");
+		pauseResume.addActionListener(this);
 		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, Control.DEFAULT_SPEED);
 		speed.setBorder(new TitledBorder("Speed"));
 		speed.addChangeListener(this);
@@ -47,6 +55,8 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		numElements.setBorder(new TitledBorder("Number of Elements"));
 		numElements.addChangeListener(this);
 		container = new JPanel();
+		container.add(startStop);
+		container.add(pauseResume);
 		container.add(speed);
 		container.add(numElements);
 		add(container, BorderLayout.SOUTH);
@@ -64,6 +74,8 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	
 	public void sort()
 	{
+		isPaused = false;
+		isRunning = true;
 		doneSorting = false;
 		buildMaxHeap();
 		for (int i = numsToSort.length - 1; i >= 1; i--)
@@ -126,6 +138,16 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		{
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e){}	
+		
+		if(isPaused == true)
+		{
+			mutex.lock();
+			try
+			{
+				condition.await();
+			} catch (InterruptedException e){}
+			mutex.unlock();
+		}
 	}
 	
 	private float[] generateRandomArray(final int size)
@@ -181,6 +203,32 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		}
 	}
 	
+	public void stop()
+	{
+		
+	}
+	
+	public void pause()
+	{
+		if (isRunning == true)
+		{
+			isPaused = true;
+			pauseResume.setText("Unpause");
+		}
+	}
+	
+	public void resume()
+	{
+		if (isRunning == true)
+		{
+			mutex.lock();
+			isPaused = false;
+			condition.signal();
+			pauseResume.setText("Pause");
+			mutex.unlock();
+		}
+	}
+	
 	public void stateChanged(ChangeEvent e)
 	{
 		if (e.getSource() == speed)
@@ -192,5 +240,24 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 			//???
 		}
 		repaint();
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if (e.getSource() == startStop)
+		{
+			
+		}
+		else if (e.getSource() == pauseResume)
+		{
+			if (isPaused == true)
+			{
+				resume();
+			}
+			else
+			{
+				pause();
+			}
+		}
 	}
 }

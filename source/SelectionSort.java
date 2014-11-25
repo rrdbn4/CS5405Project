@@ -1,6 +1,8 @@
 package code;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
@@ -9,8 +11,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
-
-public class SelectionSort extends JInternalFrame implements Runnable, ChangeListener
+public class SelectionSort extends JInternalFrame implements Runnable, ChangeListener, ActionListener
 {
 	private float[] numsToSort;
 	private int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
@@ -20,12 +21,13 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	private int sleepTime = Control.DEFAULT_SPEED;
 	
 	private final Random rand;	
+	private final Condition condition;
 	private int currentIndex;
-	private boolean doneSorting;
+	private boolean doneSorting, isPaused, isRunning;
 	
 	private JPanel container;
-	private JSlider speed;
-	private JSlider numElements;
+	private JButton startStop, pauseResume;
+	private JSlider speed, numElements;
 	
 	public SelectionSort()
 	{
@@ -34,12 +36,17 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		setMinimumSize(new Dimension(450, 200));
 	
 		mutex = new ReentrantLock();
+		condition = mutex.newCondition();
 		executor = Executors.newFixedThreadPool(1);
 		
 		rand = new Random();
 		numsToSort = generateRandomArray(arraySize);
 		currentIndex = -1; //Before the sort has started, we don't want any of the elements colored red
-				
+		
+		startStop = new JButton("Start");
+		startStop.addActionListener(this);
+		pauseResume = new JButton("Pause");
+		pauseResume.addActionListener(this);
 		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, Control.DEFAULT_SPEED);
 		speed.setBorder(new TitledBorder("Speed"));
 		speed.addChangeListener(this);
@@ -47,6 +54,8 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		numElements.setBorder(new TitledBorder("Number of Elements"));
 		numElements.addChangeListener(this);
 		container = new JPanel();
+		container.add(startStop);
+		container.add(pauseResume);
 		container.add(speed);
 		container.add(numElements);
 		add(container, BorderLayout.SOUTH);
@@ -64,12 +73,14 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	
 	private void sort()
 	{
+		isPaused = false;
+		isRunning = true;
 		doneSorting = false;
 		
 		int min;
 		for (int i = 0; i < numsToSort.length - 1; i++)
 		{
-			mutex.lock();
+			//mutex.lock();
 			min = i;
 			for (currentIndex = i+1; currentIndex < numsToSort.length; currentIndex++)
 			{
@@ -84,12 +95,22 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e){}	
 				
+				if(isPaused == true)
+				{
+					mutex.lock();
+					try
+					{
+						condition.await();
+					} catch (InterruptedException e){}
+					mutex.unlock();
+				}
+				
 			}
 			if (min != i)
 			{
 				swap(i, min);
 			}
-			mutex.unlock();
+			//mutex.unlock();
 		}
 		doneSorting = true;
 		repaint();
@@ -155,6 +176,33 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		}
 	}
 
+	
+	public void stop()
+	{
+		
+	}
+	
+	public void pause()
+	{
+		if (isRunning == true)
+		{
+			isPaused = true;
+			pauseResume.setText("Unpause");
+		}
+	}
+	
+	public void resume()
+	{
+		if (isRunning == true)
+		{
+			mutex.lock();
+			isPaused = false;
+			condition.signal();
+			pauseResume.setText("Pause");
+			mutex.unlock();
+		}
+	}
+	
 	public void stateChanged(ChangeEvent e)
 	{
 		if (e.getSource() == speed)
@@ -166,5 +214,24 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 			//???
 		}
 		repaint();
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if (e.getSource() == startStop)
+		{
+			
+		}
+		else if (e.getSource() == pauseResume)
+		{
+			if (isPaused == true)
+			{
+				resume();
+			}
+			else
+			{
+				pause();
+			}
+		}
 	}
 }

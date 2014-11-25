@@ -44,7 +44,7 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		numsToSort = generateRandomArray(arraySize);
 		currentIndex = -1; //Before the sort has started, we don't want any of the elements colored red
 		
-		startStop = new JButton("Start");
+		startStop = new JButton("Stop");
 		startStop.addActionListener(this);
 		pauseResume = new JButton("Pause");
 		pauseResume.addActionListener(this);
@@ -78,22 +78,25 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		isRunning = true;
 		doneSorting = false;
 		buildMaxHeap();
-		for (int i = numsToSort.length - 1; i >= 1; i--)
+		for (int i = numsToSort.length - 1; i >= 1 && isRunning == true; i--)
 		{
 			swap(0, i);
 			heapSize--;
 			maxHeapify(0);
 		}
-		//when we're done sorting, we don't want any elements colored red
-		currentIndex = -1; 
-		doneSorting = true;
-		repaint();
+		if (isRunning == true)
+		{
+			//when we're done sorting, we don't want any elements colored red
+			currentIndex = -1; 
+			doneSorting = true;
+			repaint();
+		}
 	}
 	
 	private void buildMaxHeap()
 	{
 		heapSize = numsToSort.length -1;
-		for (int i = (numsToSort.length)/2; i >= 0; i--)
+		for (int i = (numsToSort.length)/2; i >= 0 && isRunning == true; i--)
 		{
 			maxHeapify(i);
 		}
@@ -205,7 +208,11 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	
 	public void stop()
 	{
-		
+		isRunning = false;
+		isPaused = false;
+		mutex.lock();
+		condition.signal();
+		mutex.unlock();
 	}
 	
 	public void pause()
@@ -246,7 +253,18 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	{
 		if (e.getSource() == startStop)
 		{
-			
+			if (isRunning == true)
+			{
+				stop();
+				startStop.setText("Start");
+				pauseResume.setEnabled(false);
+			}
+			else
+			{
+				start();
+				startStop.setText("Stop");
+				pauseResume.setEnabled(true);
+			}
 		}
 		else if (e.getSource() == pauseResume)
 		{

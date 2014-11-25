@@ -43,7 +43,7 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		numsToSort = generateRandomArray(arraySize);
 		currentIndex = -1; //Before the sort has started, we don't want any of the elements colored red
 		
-		startStop = new JButton("Start");
+		startStop = new JButton("Stop");
 		startStop.addActionListener(this);
 		pauseResume = new JButton("Pause");
 		pauseResume.addActionListener(this);
@@ -78,11 +78,10 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		doneSorting = false;
 		
 		int min;
-		for (int i = 0; i < numsToSort.length - 1; i++)
+		for (int i = 0; i < numsToSort.length - 1 && isRunning == true; i++)
 		{
-			//mutex.lock();
 			min = i;
-			for (currentIndex = i+1; currentIndex < numsToSort.length; currentIndex++)
+			for (currentIndex = i+1; currentIndex < numsToSort.length && isRunning == true; currentIndex++)
 			{
 				if (numsToSort[currentIndex] < numsToSort[min])
 				{
@@ -104,16 +103,17 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 					} catch (InterruptedException e){}
 					mutex.unlock();
 				}
-				
 			}
-			if (min != i)
+			if (min != i && isRunning == true)
 			{
 				swap(i, min);
 			}
-			//mutex.unlock();
 		}
-		doneSorting = true;
-		repaint();
+		if (isRunning == true)
+		{
+			doneSorting = true;
+			repaint();
+		}
 	}
 	
 	private void swap(final int i, final int j)
@@ -179,7 +179,11 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	
 	public void stop()
 	{
-		
+		isRunning = false;
+		isPaused = false;
+		mutex.lock();
+		condition.signal();
+		mutex.unlock();
 	}
 	
 	public void pause()
@@ -220,17 +224,31 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	{
 		if (e.getSource() == startStop)
 		{
-			
-		}
-		else if (e.getSource() == pauseResume)
-		{
-			if (isPaused == true)
+			if (isRunning == true)
 			{
-				resume();
+				stop();
+				startStop.setText("Start");
+				pauseResume.setEnabled(false);
 			}
 			else
 			{
-				pause();
+				start();
+				startStop.setText("Stop");
+				pauseResume.setEnabled(true);
+			}
+		}
+		else if (e.getSource() == pauseResume)
+		{
+			if (isRunning == true)
+			{
+				if (isPaused == true)
+				{
+					resume();
+				}
+				else
+				{
+					pause();
+				}
 			}
 		}
 	}

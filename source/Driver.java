@@ -22,7 +22,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	private QuickSort qs;
 	
 	private int sleepTime = Control.DEFAULT_SPEED;
-	private final int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
+	private int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
 	
 	private JPanel container;
 	private JButton startStop;
@@ -271,10 +271,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		heapSortItem.addActionListener(this);
 		shellSortItem.addActionListener(this);
 		
-		//num elements slider
-		//speed slider
-		//start/stop button group?
-		
 		JMenu clockMenu = new JMenu("Clock");
 		clockMenu.add(new Clock());
 		
@@ -287,6 +283,36 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 
 	public void stateChanged(ChangeEvent e)
 	{
-		
+		if (e.getSource() == speed)
+		{
+			sleepTime = Control.MAX_SPEED - speed.getValue();
+			
+			//set sleep time of every open sort
+			
+			/*if (qs != null && qs.isClosed() == false)
+			{
+				setSleepTime(sleepTime);
+			}
+			...
+			...
+			...
+			*/
+			
+		}
+		else if (e.getSource() == numElements)
+		{
+			arraySize = numElements.getValue();
+			
+			//set array size of every open sort
+			
+			/*if (qs != null && qs.isClosed() == false)
+			{
+				setArray(arraySize);
+			}
+			...
+			...
+			...
+			*/
+		}
 	}
 }	

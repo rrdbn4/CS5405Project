@@ -118,6 +118,14 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 
 	public void start()
 	{
+    if(randArray == null || isSorted())
+      createRandArray();
+    isRunning = true;
+		executor.execute(this);
+	}
+
+  public void createRandArray()
+  {
     randArray = new float[numElements];
     for(int i = 0; i < numElements; i++)
       randArray[i] = (i+1) * (1.0f / (float)numElements);
@@ -126,9 +134,16 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     Random rand = new Random();
     for(int i = 0; i < numElements*2; i++)
       swap(rand.nextInt(randArray.length), rand.nextInt(randArray.length));
-    isRunning = true;
-		executor.execute(this);
-	}
+  }
+
+  public boolean isSorted()
+  {
+    for(int i = 0; i < randArray.length - 1; i++)
+      if(randArray[i] >= randArray[i + 1])
+        return false;
+
+    return true;
+  }
 
   public void stop()
   {
@@ -157,7 +172,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
   {
     if(isRunning)
       stop();
+    createRandArray();
     numElements = numEl;
+    highlightIndex = -1;
+    repaint();
   }
 
 	public void actionPerformed(ActionEvent e)

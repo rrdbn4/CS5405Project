@@ -172,8 +172,8 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
   {
     if(isRunning)
       stop();
-    createRandArray();
     numElements = numEl;
+    createRandArray();
     highlightIndex = -1;
     repaint();
   }

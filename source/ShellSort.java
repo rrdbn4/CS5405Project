@@ -20,6 +20,7 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 	int highlightIndex = 0;
 	boolean doneSorting = false;
 	boolean isPaused = false;
+	boolean isRunning = true;
 
 	JPanel container;
 	JButton startStop, pauseResume;
@@ -54,15 +55,6 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
     container.add(numElSlider);
     add(container, BorderLayout.SOUTH);
 
-		randArray = new float[numElements];
-		for(int i = 0; i < numElements; i++)
-			randArray[i] = (i+1) * (1.0f / (float)numElements);
-
-		//randomize elements in the array so we have something to sort
-		Random rand = new Random();
-		for(int i = 0; i < numElements*2; i++)
-			swap(rand.nextInt(randArray.length), rand.nextInt(randArray.length));
-
 		executor = Executors.newFixedThreadPool(1);
 	}
 
@@ -85,7 +77,8 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 	public void run()
 	{
 		doneSorting = false;
-
+		isPaused = false;
+		isRunning = true;
 		int increment = randArray.length / 2;
 		while (increment > 0) 
 		{
@@ -95,6 +88,12 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 				float temp = randArray[i];
 				while (j >= increment && randArray[j - increment] > temp) 
 				{
+					if(!isRunning)  //break out of loop
+	        {
+	          increment = -1;
+	          i = 9999999;
+	          break;
+	        }
 					if(isPaused)
 					{
 						lock.lock();
@@ -121,30 +120,75 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 				increment *= (5.0 / 11);
 			}
 		}
-
-		doneSorting = true;
-		repaint();
+		if(isRunning) //only show as done if it wasn't killed
+    {
+  		doneSorting = true;
+  		repaint();
+    }
+    isRunning = false;
 	}
 
 	public void start()
 	{
+    if(randArray == null || isSorted())
+      createRandArray();
+    isRunning = true;
 		executor.execute(this);
 	}
 
+	public void createRandArray()
+  {
+    randArray = new float[numElements];
+    for(int i = 0; i < numElements; i++)
+      randArray[i] = (i+1) * (1.0f / (float)numElements);
+
+    //randomize elements in the array so we have something to sort
+    Random rand = new Random();
+    for(int i = 0; i < numElements*2; i++)
+      swap(rand.nextInt(randArray.length), rand.nextInt(randArray.length));
+  }
+
+  public boolean isSorted()
+  {
+    for(int i = 0; i < randArray.length - 1; i++)
+      if(randArray[i] >= randArray[i + 1])
+        return false;
+
+    return true;
+  }
+
+	public void stop()
+  {
+    isRunning = false;
+    isPaused = false;
+  }
+
 	public void pause()
 	{
-		System.out.println("pause");
-		isPaused = true;
+    if(isRunning)
+		  isPaused = true;
 	}
 
 	public void resume()
-	{
-		System.out.println("resume");
-		isPaused = false;
-		lock.lock();  
-		condition.signal();
-		lock.unlock();
+  {
+    if(isRunning)
+    {
+  		isPaused = false;
+  		lock.lock();  
+  		condition.signal();
+  		lock.unlock();
+    }
 	}
+
+	public void setNumberOfElements(int numEl)
+  {
+    if(isRunning)
+      stop();
+    numElements = numEl;
+    createRandArray();
+    highlightIndex = -1;
+    repaint();
+  }
 
 	public void actionPerformed(ActionEvent e)
 	{
@@ -154,6 +198,13 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 				resume();
 			else
 				pause();
+		}
+		else if(e.getSource() == startStop)
+		{
+      if(isRunning)
+        stop();
+      else
+        start();
 		}
 	}
 
@@ -165,7 +216,7 @@ public class ShellSort extends JInternalFrame implements Runnable, ChangeListene
 		}
 		else
 		{
-			//numElements
+			setNumberOfElements(numElSlider.getValue());
 		}
 	}
 

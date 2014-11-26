@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
@@ -407,6 +408,16 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 			pauseResume.setText("Pause");
 			mutex.unlock();
 		}
+	}
+	
+	/**
+	 * Sets sleepTime, and changes the value of the sleep slider
+	 * @param sleep The new sleep value
+	 */
+	public void setDelay(final int delay)
+	{
+		sleepTime =  Control.MAX_SPEED - delay;
+		speed.setValue(delay);
 	}
 	
 	/**

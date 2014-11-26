@@ -287,11 +287,19 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		{
 			sleepTime = Control.MAX_SPEED - speed.getValue();
 			
-			//set sleep time of every open sort
 			
-			/*if (qs != null && qs.isClosed() == false)
+			if (ss != null && !ss.isClosed())
+			{ 
+				ss.setDelay(speed.getValue());
+			}
+			if (hs != null && !hs.isClosed())
+			{ 
+				hs.setDelay(speed.getValue());
+			}
+			
+			/*if (bs != null && bs.isClosed() == false)
 			{
-				setSleepTime(sleepTime);
+				bs.setDelay(speed.getValue());
 			}
 			...
 			...

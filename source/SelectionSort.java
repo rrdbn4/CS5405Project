@@ -77,32 +77,34 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		isRunning = true;
 		doneSorting = false;
 		
+		pauseResume.setText("Pause");
+		
 		int min;
-		for (int i = 0; i < numsToSort.length - 1 && isRunning == true; i++)
+		for (int i = 0; i < numsToSort.length - 1 && isRunning == true && doneSorting == false; i++)
 		{
 			min = i;
-			for (currentIndex = i+1; currentIndex < numsToSort.length && isRunning == true; currentIndex++)
+			for (currentIndex = i+1; currentIndex < numsToSort.length && isRunning == true && doneSorting == false; currentIndex++)
 			{
 				if (numsToSort[currentIndex] < numsToSort[min])
 				{
 					min = currentIndex;
 				}	
 				
+				mutex.lock();
 				repaint();
 				try
 				{
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e){}	
 				
-				if(isPaused == true)
+				if(isPaused == true && doneSorting == false)
 				{
-					mutex.lock();
 					try
 					{
 						condition.await();
-					} catch (InterruptedException e){}
-					mutex.unlock();
+					} catch (InterruptedException e){}	
 				}
+				mutex.unlock();
 			}
 			if (min != i && isRunning == true)
 			{
@@ -121,6 +123,11 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		float temp = numsToSort[i];
 		numsToSort[i] = numsToSort[j];
 		numsToSort[j] = temp;		
+	}
+	
+	public void setArray(final float[] array)
+	{
+		numsToSort = array;
 	}
 	
 	private float[] generateRandomArray(final int size)
@@ -158,7 +165,7 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		
 		int width = getWidth() - getInsets().left - getInsets().right;
 		int height = getHeight() - getInsets().top - getInsets().bottom - container.getHeight(); 
-		for (int i = 0; i < numsToSort.length - 1; i++)
+		for (int i = 0; i < numsToSort.length; i++)
 		{
 			if (doneSorting == false)
 			{
@@ -181,9 +188,7 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	{
 		isRunning = false;
 		isPaused = false;
-		mutex.lock();
-		condition.signal();
-		mutex.unlock();
+		startStop.setText("Start");
 	}
 	
 	public void pause()
@@ -215,7 +220,16 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		}
 		else if (e.getSource() == numElements)
 		{
-			//???
+			stop();
+			
+			arraySize = numElements.getValue();
+			setArray(generateRandomArray(arraySize));
+			
+			startStop.setText("Start");
+			pauseResume.setText("Pause");
+			
+			doneSorting = false;
+			currentIndex = -1;
 		}
 		repaint();
 	}
@@ -226,15 +240,16 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		{
 			if (isRunning == true)
 			{
-				stop();
 				startStop.setText("Start");
 				pauseResume.setEnabled(false);
+				stop();
+				
 			}
 			else
 			{
-				start();
 				startStop.setText("Stop");
 				pauseResume.setEnabled(true);
+				start();
 			}
 		}
 		else if (e.getSource() == pauseResume)

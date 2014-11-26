@@ -77,6 +77,7 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		isPaused = false;
 		isRunning = true;
 		doneSorting = false;
+		
 		buildMaxHeap();
 		for (int i = numsToSort.length - 1; i >= 1 && isRunning == true; i--)
 		{
@@ -153,6 +154,11 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		}
 	}
 	
+	public void setArray(final float[] array)
+	{
+		numsToSort = array;
+	}
+	
 	private float[] generateRandomArray(final int size)
 	{
 		float[] array = new float[size];	
@@ -188,7 +194,7 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		
 		int width = getWidth() - getInsets().left - getInsets().right;
 		int height = getHeight() - getInsets().top - getInsets().bottom - container.getHeight(); 
-		for (int i = 0; i < numsToSort.length - 1; i++)
+		for (int i = 0; i < numsToSort.length; i++)
 		{
 			if (doneSorting == false)
 			{
@@ -210,9 +216,7 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	{
 		isRunning = false;
 		isPaused = false;
-		mutex.lock();
-		condition.signal();
-		mutex.unlock();
+		startStop.setText("Start");
 	}
 	
 	public void pause()
@@ -244,7 +248,16 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 		}
 		else if (e.getSource() == numElements)
 		{
-			//???
+			stop();
+			
+			arraySize = numElements.getValue();
+			setArray(generateRandomArray(arraySize));
+			
+			startStop.setText("Start");
+			pauseResume.setText("Pause");
+			
+			doneSorting = false;
+			currentIndex = -1;
 		}
 		repaint();
 	}

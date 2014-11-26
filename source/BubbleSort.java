@@ -113,6 +113,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
   		doneSorting = true;
   		repaint();
     }
+    isRunning = false;
 	}
 
 	public void start()
@@ -157,7 +158,6 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     if(isRunning)
       stop();
     numElements = numEl;
-    start();
   }
 
 	public void actionPerformed(ActionEvent e)

@@ -42,7 +42,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		startStop.addActionListener(this);
 		pauseResume = new JButton("Pause");
 		pauseResume.addActionListener(this);
-		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
+		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, Control.DEFAULT_SPEED);
 		speed.setBorder(new TitledBorder("Speed"));
 		speed.addChangeListener(this);
 		numElements = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, Control.DEFUALT_NUM_OF_ELEMENTS);
@@ -300,6 +300,10 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{
 				bs.setDelay(speed.getValue());
 			}
+			if (shs != null && shs.isClosed() == false)
+			{
+				shs.setDelay(speed.getValue());
+			}
 			
 			/*if (bs != null && bs.isClosed() == false)
 			{
@@ -315,7 +319,14 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		{
 			arraySize = numElements.getValue();
 			
-			//set array size of every open sort
+			if (bs != null && bs.isClosed() == false)
+			{
+				bs.setNumberOfElements(arraySize);
+			}
+			if (shs != null && shs.isClosed() == false)
+			{
+				shs.setNumberOfElements(arraySize);
+			}
 			
 			/*if (qs != null && qs.isClosed() == false)
 			{

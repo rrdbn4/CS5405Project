@@ -296,6 +296,10 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{ 
 				hs.setDelay(speed.getValue());
 			}
+			if (bs != null && bs.isClosed() == false)
+			{
+				bs.setDelay(speed.getValue());
+			}
 			
 			/*if (bs != null && bs.isClosed() == false)
 			{

@@ -1,8 +1,10 @@
 package code;
-//Global singleton for thread control
+
+/**
+Global static constants to be used throughout the application
+*/
 public class Control 
 {
-   private boolean isPaused = true; //just an example. Add more control later
    public static int MAX_SPEED = 500;
    public static int MIN_SPEED = 1;
    public static int DEFAULT_SPEED = 50;

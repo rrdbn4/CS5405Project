@@ -14,8 +14,8 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 	ExecutorService executor;
 
 	float[] randArray;
-	int numElements = 30;
-	int sleepTime = 200;
+	int numElements = Control.DEFUALT_NUM_OF_ELEMENTS;
+	int sleepTime = Control.DEFAULT_SPEED;
 	int highlightIndex = 0;
 	boolean doneSorting = false;
 	boolean isPaused = false;
@@ -39,10 +39,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     startStop = new JButton("Start / Stop");
     startStop.addActionListener(this);
 
-    speedSlider = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, sleepTime);
+    speedSlider = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, Control.DEFAULT_SPEED);
 		speedSlider.setBorder(new TitledBorder("Speed"));
 		speedSlider.addChangeListener(this);
-		numElSlider = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, numElements);
+		numElSlider = new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS, Control.DEFUALT_NUM_OF_ELEMENTS);
 		numElSlider.setBorder(new TitledBorder("No. Elements"));
 		numElSlider.addChangeListener(this);
 
@@ -176,6 +176,11 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     createRandArray();
     highlightIndex = -1;
     repaint();
+  }
+
+  public void setDelay(int millisecondDelay)
+  {
+    speedSlider.setValue(millisecondDelay);
   }
 
 	public void actionPerformed(ActionEvent e)

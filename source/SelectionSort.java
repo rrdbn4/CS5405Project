@@ -163,6 +163,7 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		isRunning = true;
 		doneSorting = false;
 		
+		startStop.setText("Stop");
 		pauseResume.setText("Pause");
 		
 		/**
@@ -230,11 +231,23 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	
 	/**
 	 * Sets the numsToSort array. The data being sorted.
-	 * @param array The new array to sort.
+	 * @param size The size of the new array to sort.
 	 */
-	public void setArray(final float[] array)
+	public void setNumberOfElements(final int size)
 	{
-		numsToSort = array;
+		/**
+		 * Stop sorting the array.
+		 */
+		stop();
+		
+		numElements.setValue(size);
+		numsToSort = generateRandomArray(size);
+		
+		startStop.setText("Start");
+		pauseResume.setText("Pause");
+		
+		doneSorting = false;
+		currentIndex = -1;
 	}
 	
 	/**
@@ -360,6 +373,24 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	}
 	
 	/**
+	 * Returns whether or not the sort is currently running.
+	 * @return Whether or not the sort is currently running.
+	 */
+	public boolean isRunning()
+	{
+		return isRunning;
+	}
+	
+	/**
+	 * Returns whether or not the sort is currently paused.
+	 * @return Whether or not the sort is currently paused.
+	 */
+	public boolean isPaused()
+	{
+		return isPaused;
+	}
+	
+	/**
 	 * Event driven programming.
 	 */
 	public void stateChanged(ChangeEvent e)
@@ -377,21 +408,10 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 		else if (e.getSource() == numElements)
 		{
 			/**
-			 * Stop sorting the array.
-			 */
-			stop();
-			
-			/**
 			 * Set numsToSort to a new random array of the size returned by the slider.
 			 */
 			arraySize = numElements.getValue();
-			setArray(generateRandomArray(arraySize));
-			
-			startStop.setText("Start");
-			pauseResume.setText("Pause");
-			
-			doneSorting = false;
-			currentIndex = -1;
+			setNumberOfElements(arraySize);
 		}
 		repaint();
 	}

@@ -38,9 +38,9 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		setJMenuBar(setupMenuBar());
 		add(desktop);
 		
-		startStop = new JButton("Start");
+		startStop = new JButton("Start/Stop");
 		startStop.addActionListener(this);
-		pauseResume = new JButton("Pause");
+		pauseResume = new JButton("Pause/Resume");
 		pauseResume.addActionListener(this);
 		speed = new JSlider(Control.MIN_SPEED, Control.MAX_SPEED, Control.DEFAULT_SPEED);
 		speed.setBorder(new TitledBorder("Speed"));
@@ -202,11 +202,73 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		{
 			if (e.getSource() == startStop)
 			{
-				
+				if (ss != null && !ss.isClosed())
+				{ 
+					if (ss.isRunning() == true)
+					{
+						if(ss.isPaused())
+						{
+							ss.resume();
+						}
+						ss.stop();
+					}
+					else
+					{
+						ss.start();
+					}
+				}
+				if (hs != null && !hs.isClosed())
+				{ 
+					if (hs.isRunning() == true)
+					{
+						if(hs.isPaused())
+						{
+							hs.resume();
+						}
+						hs.stop();
+					}
+					else
+					{
+						hs.start();
+					}
+				}
 			}
 			else if (e.getSource() == pauseResume)
 			{
-			
+				if (ss != null && !ss.isClosed())
+				{ 
+					if (ss.isPaused() == true)
+					{
+						if (ss.isRunning() == true)
+						{
+							ss.resume();
+						}
+					}
+					else
+					{
+						if (ss.isRunning() == true)
+						{
+							ss.pause();
+						}
+					}
+				}
+				if (hs != null && !hs.isClosed())
+				{ 
+					if (hs.isPaused() == true)
+					{
+						if (hs.isRunning() == true)
+						{
+							hs.resume();
+						}
+					}
+					else
+					{
+						if (hs.isRunning() == true)
+						{
+							hs.pause();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -319,6 +381,14 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		{
 			arraySize = numElements.getValue();
 			
+			if (ss != null && !ss.isClosed())
+			{ 
+				ss.setNumberOfElements(arraySize);
+			}
+			if (hs != null && !hs.isClosed())
+			{ 
+				hs.setNumberOfElements(arraySize);
+			}
 			if (bs != null && bs.isClosed() == false)
 			{
 				bs.setNumberOfElements(arraySize);

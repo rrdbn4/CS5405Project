@@ -14,6 +14,11 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	private JMenuItem author, problemDescription, help, references, bubbleSortMenuItem, selectionSortMenuItem, mergeSortMenuItem, quickSortMenuItem, heapSortMenuItem, shellSortMenuItem;
 	private JCheckBox bubbleSortItem, selectionSortItem, mergeSortItem, quickSortItem, heapSortItem, shellSortItem;
 	
+	private Authors authors = new Authors();
+	private ProblemDescription problem = new ProblemDescription();
+	private Help helpWindow = new Help();
+	private References refWindow = new References();
+	
 	private SelectionSort ss;
 	private HeapSort hs;
 	private BubbleSort bs;
@@ -55,6 +60,11 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		container.add(numElements);
 		add(container, BorderLayout.SOUTH);
 		setVisible(true);
+		
+		desktop.add(authors);
+		desktop.add(problem);
+		desktop.add(helpWindow);
+		desktop.add(refWindow);
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -127,7 +137,47 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		}
 		else if (e.getSource()  instanceof JMenuItem)
 		{
-			if (e.getSource() == selectionSortMenuItem)
+			if (e.getSource() == author)
+			{
+				authors.setVisible(true);
+				authors.toFront();
+				
+				if(authors.isClosed())
+				{
+					desktop.add(authors);
+				}
+			}
+			else if (e.getSource() == problemDescription)
+			{
+				problem.setVisible(true);
+				problem.toFront();
+				
+				if(problem.isClosed())
+				{
+					desktop.add(problem);
+				}
+			}
+			else if (e.getSource() == help)
+			{
+				helpWindow.setVisible(true);
+				helpWindow.toFront();
+				
+				if(helpWindow.isClosed())
+				{
+					desktop.add(helpWindow);
+				}
+			}
+			else if (e.getSource() == references)
+			{
+				refWindow.setVisible(true);
+				refWindow.toFront();
+				
+				if(refWindow.isClosed())
+				{
+					desktop.add(refWindow);
+				}
+			}
+			else if (e.getSource() == selectionSortMenuItem)
 			{
 				if (ss == null || ss.isClosed())
 				{ 

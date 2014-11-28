@@ -79,7 +79,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{ 
 				ss = new SelectionSort();
 				desktop.add(ss);
-				ss.start();
 			}
 			ss.setVisible(true);
 			ss.toFront();		  
@@ -90,7 +89,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{ 
 				ms = new MergeSort();
 				desktop.add(ms);
-				
 			}
 			ms.setVisible(true);
 			ms.toFront();		  
@@ -101,7 +99,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{ 
 				qs = new QuickSort();
 				desktop.add(qs);
-				
 			}
 			qs.setVisible(true);
 			qs.toFront();		  
@@ -112,7 +109,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{ 
 				hs = new HeapSort();
 				desktop.add(hs);
-				hs.start();
 			}
 			hs.setVisible(true);
 			hs.toFront();		  

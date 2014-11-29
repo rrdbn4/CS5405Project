@@ -278,6 +278,36 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 						hs.start();
 					}
 				}
+				if (bs != null && !bs.isClosed())
+				{ 
+					if (bs.isRunning() == true)
+					{
+						if(bs.isPaused())
+						{
+							bs.resume();
+						}
+						bs.stop();
+					}
+					else
+					{
+						bs.start();
+					}
+				}
+				if (shs != null && !shs.isClosed())
+				{ 
+					if (shs.isRunning() == true)
+					{
+						if(shs.isPaused())
+						{
+							shs.resume();
+						}
+						shs.stop();
+					}
+					else
+					{
+						shs.start();
+					}
+				}
 			}
 			else if (e.getSource() == pauseResume)
 			{
@@ -312,6 +342,40 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 						if (hs.isRunning() == true)
 						{
 							hs.pause();
+						}
+					}
+				}
+				if (bs != null && !bs.isClosed())
+				{ 
+					if (bs.isPaused() == true)
+					{
+						if (bs.isRunning() == true)
+						{
+							bs.resume();
+						}
+					}
+					else
+					{
+						if (bs.isRunning() == true)
+						{
+							bs.pause();
+						}
+					}
+				}
+				if (shs != null && !shs.isClosed())
+				{ 
+					if (shs.isPaused() == true)
+					{
+						if (shs.isRunning() == true)
+						{
+							shs.resume();
+						}
+					}
+					else
+					{
+						if (shs.isRunning() == true)
+						{
+							shs.pause();
 						}
 					}
 				}

@@ -9,25 +9,71 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
+/**
+The internal frame visualizer for bubble sort.
+The sort runs in its own thread and the speed and number of elements in the array are adjustable.
+The visualization is a simple colorized bar graph
+@author Robert Dunn
+*/
 public class BubbleSort extends JInternalFrame implements Runnable, ChangeListener, ActionListener
 {
+  /** 
+  The executor service for the sorting thread 
+  */
 	ExecutorService executor;
 
+  /**
+  The randomized array of elements being sorted for the visual
+  */
 	float[] randArray;
+  /**
+  The size of randArray. This defaults to the global default constant
+  */
 	int numElements = Control.DEFUALT_NUM_OF_ELEMENTS;
+
+  /**
+  The sleep time in milliseconds for the sorting thread sleep interruption
+  */
 	int sleepTime = Control.DEFAULT_SPEED;
+  /**
+  The current index of the sort to highlight in the visual
+  */
 	int highlightIndex = 0;
+  /**
+  The bool flag to tell if the sort is done
+  */
 	boolean doneSorting = false;
+  /**
+  The bool flag to tell if the thread is paused
+  */
 	boolean isPaused = false;
+  /**
+  The bool flag to tell if the thread is stopped
+  */
   boolean isRunning = true;
 
+  /**
+  The container for the sliders, buttons, and gridlayout
+  */
 	JPanel container;
+  /**
+  The buttons to control the visual
+  */
 	JButton startStop, pauseResume;
+  /**
+  The sliders to controls the speed of the sort and number of elements in the array
+  */
 	JSlider speedSlider, numElSlider;
 
+  /**
+  The lock and mutex for the thread stuff
+  */
 	Lock lock = new ReentrantLock();
 	Condition condition = lock.newCondition();
 
+  /**
+  Sets up the graphical elements and stes up the executor service
+  */
 	public BubbleSort()
 	{
 		super("Bubble Sort", true, true, true, true);
@@ -57,7 +103,11 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		executor = Executors.newFixedThreadPool(1);
 	}
 
-	//swap element i with element j in randArray
+  /**
+	swap element i with element j in randArray
+  @param i   the index of the the element to swap with element j
+  @param i   the index of the the element to swap with element i
+  */
 	public void swap(int i, int j)
 	{
 		if(i >= randArray.length || j >= randArray.length)
@@ -68,11 +118,20 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		randArray[j] = temp;
 	}
 
+  /**
+  rounds the input to the nearest integer
+  @param input   the float to be rounded
+  @return   the rounded float returned as an int
+  */
 	public int round(float input)
 	{
 		return (int)(input + 0.5f);
 	}
 
+  /**
+  the sorting thread's run method
+  this is where bubble sort is performed and where the painting is controlled
+  */
 	public void run()
 	{
 		doneSorting = false;
@@ -116,6 +175,9 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     isRunning = false;
 	}
 
+  /**
+  starts the visualization thread
+  */
 	public void start()
 	{
     if(isRunning)
@@ -126,6 +188,9 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		executor.execute(this);
 	}
 
+  /**
+  fills randArray with evenly stepped floats, then randomizes the elements
+  */
   public void createRandArray()
   {
     randArray = new float[numElements];
@@ -138,6 +203,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
       swap(rand.nextInt(randArray.length), rand.nextInt(randArray.length));
   }
 
+  /**
+  is the array sorted?
+  @return true if randArray is sorted, false if not
+  */
   public boolean isSorted()
   {
     for(int i = 0; i < randArray.length - 1; i++)
@@ -147,18 +216,45 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     return true;
   }
 
+  /**
+  stops the visualization thread
+  */
   public void stop()
   {
     isRunning = false;
     isPaused = false;
   }
 
+  /**
+  pauses the visual thread and waits for the condition signal
+  */
 	public void pause()
 	{
     if(isRunning)
 		  isPaused = true;
 	}
 
+  /**
+  is the visual running?
+  @return true if the thread is running, false if not
+  */
+  public boolean isRunning()
+  {
+    return isRunning;
+  }
+
+  /**
+  is the visual paused?
+  @return true if the thread is paused, false if not
+  */
+  public boolean isPaused()
+  {
+    return isPaused;
+  }
+
+  /**
+  resumes the thread from a paused state if it is running in the first place
+  */
 	public void resume()
   {
     if(isRunning)
@@ -169,7 +265,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
   		lock.unlock();
     }
 	}
-
+  /**
+  stops the visual if it's running, sets the number of elements in the array, then randomizes the array 
+  @param numEl   the number of elements in randArray
+  */
   public void setNumberOfElements(int numEl)
   {
     if(isRunning)
@@ -180,11 +279,19 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
     repaint();
   }
 
+  /**
+  set the thread sleep time
+  @param millisecondDelay   sleep time
+  */
   public void setDelay(int millisecondDelay)
   {
     speedSlider.setValue(millisecondDelay);
   }
 
+  /**
+  action event for the buttons
+  controls thread pausing, resuming, stopping, and starting
+  */
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getSource() == pauseResume)
@@ -203,6 +310,10 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		}
 	}
 
+  /**
+  change listener for the sliders
+  controls the speed of the sort and number of elements in the array
+  */
 	public void stateChanged(ChangeEvent e)
 	{
 		if(e.getSource() == speedSlider)
@@ -215,6 +326,9 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
 		}
 	}
 
+  /**
+  paint the bar graph visual of the sort
+  */
 	public void paint(Graphics g)
 	{
 		super.paint(g);

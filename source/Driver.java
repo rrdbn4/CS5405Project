@@ -31,7 +31,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 	/** bubbleSortMenuItem is the menu item for displaying the bubble sort visualization. */
 	private JMenuItem bubbleSortMenuItem;
 	/** selectionSortMenuItem is the menu item for displaying the selection sort visualization.*/
-	private JMenuItem selectionSortMenuItem
+	private JMenuItem selectionSortMenuItem;
 	/** mergeSortMenuItem is the menu item for displaying the merge sort visualization. */
 	private JMenuItem mergeSortMenuItem;
 	/** quickSortMenuItem is the menu item for displaying the quick sort visualization.*/

@@ -8,6 +8,7 @@ package code;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.border.TitledBorder;
 import java.util.concurrent.*;
 import javax.swing.event.*;
 import java.util.concurrent.locks.Lock;
@@ -45,6 +46,8 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
   boolean running;
   /** executor is the thread service for MergeSort. */
   private final ExecutorService executor;
+  /** container holds the buttons for controlling execution of merge sort. */
+  JPanel container;
 
   /** 
   The constructor creates buttons and sliders for controlling the MergeThread execution.
@@ -53,46 +56,41 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
   	public MergeSort()
   	{
 		super("Merge Sort Demo", true, true, true, true);
+		size=Control.DEFUALT_NUM_OF_ELEMENTS;
+		pause=false;
+		delay=Control.DEFAULT_SPEED;
+		
 		startButton=new JButton("Start");
 		startButton.addActionListener(this);
 		stop=new JButton("Stop");
 		stop.addActionListener(this);
 		pauseButton=new JButton("Pause");
 		pauseButton.addActionListener(this);
-		setLayout(new FlowLayout());
-		add(startButton);
-		add(stop);
-		add(pauseButton);
-		JPanel sizePanel=new JPanel();		
-		JLabel sizeLabel= new JLabel("Slide for Number of Elements to Sort");
-		sizePanel.add(sizeLabel);
+	
 		sizeSelector= new JSlider(Control.MIN_NUM_OF_ELEMENTS, Control.MAX_NUM_OF_ELEMENTS,10);
-		sizeSelector.setMajorTickSpacing(100);
-		sizeSelector.setPaintTicks(true);
+		sizeSelector.setBorder(new TitledBorder("Number of Elements"));
 		sizeSelector.addChangeListener(this);
-		sizePanel.add(sizeSelector);
-		sizePanel.setLayout(new BoxLayout(sizePanel, BoxLayout.PAGE_AXIS));
-		add(sizePanel);		
-		
-		JPanel delayPanel=new JPanel();		
-		JLabel delayLabel= new JLabel("Slide for the Speed of Sorting");
-		delayPanel.add(delayLabel);
+
+			
 		delaySelector= new JSlider(Control.MIN_SPEED, Control.MAX_SPEED,300);
-		delaySelector.setMajorTickSpacing(100);
-		delaySelector.setPaintTicks(true);
+		delaySelector.setBorder(new TitledBorder("Speed"));
 		delaySelector.addChangeListener(this);
-		sizePanel.add(delaySelector);
-		delayPanel.setLayout(new BoxLayout(delayPanel, BoxLayout.PAGE_AXIS));
-		add(delayPanel);
+		
+		container = new JPanel();
+		container.add(startButton);
+        container.add(stop);
+		container.add(pauseButton);
+		container.add(delaySelector);
+		container.add(sizeSelector);
+		add(container, BorderLayout.SOUTH);
+		
 		executor = Executors.newFixedThreadPool(1);
 		executor.execute(this);
-        size=Control.DEFUALT_NUM_OF_ELEMENTS;
+        
 		setSize(650,300);
 		setVisible(true);
 		setOpaque(true);
         mThread=new MergeThread();
-		pause=false;
-		delay=Control.DEFAULT_SPEED;
   	}
 	
   /**
@@ -237,13 +235,11 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
   public void paint(Graphics g)
   {
  	super.paint(g);
-    int[] data=mThread.getData();
+    float[] data=mThread.getData();
 	if(data!=null)
 	{
-	int offset=0;
-	int x=10;
-	int y=getHeight()-(getHeight()/size);
-	int width=(getWidth()-10)/(size+1);
+	int width = getWidth() - getInsets().left - getInsets().right;
+	int height = getHeight() - getInsets().top - getInsets().bottom - container.getHeight(); 
 	for(int i=0;i<data.length;i++)
 	{
 	  if(mThread.isFinished()==true)
@@ -252,9 +248,9 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	    g.setColor(Color.RED);
 	  else
 	    g.setColor(Color.BLUE);
-	  g.fillRect(x+offset,y-data[i],width,data[i]);
-	  offset+=width;
-	}
+
+	  g.fillRect(getInsets().left + round(i * (width / (float)data.length)), getInsets().top + round(height - (height * data[i])), round(width / (float)data.length), round(height * data[i]));
+	  }
 	}    
   }
   

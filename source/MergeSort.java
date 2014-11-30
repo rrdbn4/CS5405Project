@@ -1,3 +1,9 @@
+/**
+ * @author Holly Busken
+ * @version 1.0
+ * Merge sort frame.
+ * Visualizes merge sort algorithm in a JInternalFrame. 
+*/
 package code;
 import javax.swing.*;
 import java.awt.*;
@@ -11,25 +17,39 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.*;
 import java.util.Random;
 
+/**
+The MergeSort class creates a visualization and uses controls 
+for the MergeThread class.
+*/
 public class MergeSort extends JInternalFrame implements ActionListener, ChangeListener, Runnable
 {
-
-  private boolean resumed = false;
+  /** size controls the number of items sorted. */
   int size;
+  /** delay controls the speed of sorting. */
   int delay;
+  /** pause is a flag for halting MergeThread execution. */
   boolean pause;
-  String string;
+  /** startButton is the button for starting MergeThread execution. */
   JButton startButton;
+  /** stop is the button for stopping MergeThread execution. */
   JButton stop;
+  /** pauseButton is the button for halting MergeThread execution. */
   JButton pauseButton;
+  /** sizeSelector is the slider for changing the number of items to sort. */
   JSlider sizeSelector;
+  /** delaySelector is the slider for changing the speed of sorting. */
   JSlider delaySelector;
-  boolean start=false;
+  /** mThread is the MergeThread being controlled and visualized. */
   MergeThread mThread;
+  /** running is a flag for determining if MergeThread is running. */
+  boolean running;
+  /** executor is the thread service for MergeSort. */
   private final ExecutorService executor;
-  public Lock lock=new ReentrantLock();
-  public Condition condition=lock.newCondition();
 
+  /** 
+  The constructor creates buttons and sliders for controlling the MergeThread execution.
+  The variables size and delay are set to the default values in the Control class.
+  */
   	public MergeSort()
   	{
 		super("Merge Sort Demo", true, true, true, true);
@@ -66,21 +86,52 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 		add(delayPanel);
 		executor = Executors.newFixedThreadPool(1);
 		executor.execute(this);
-        size=10;
-		setSize(600,600);
+        size=Control.DEFUALT_NUM_OF_ELEMENTS;
+		setSize(650,300);
 		setVisible(true);
 		setOpaque(true);
         mThread=new MergeThread();
 		pause=false;
-		delay=1000;
+		delay=Control.DEFAULT_SPEED;
   	}
 	
+  /**
+  Sets the speed for sorting.
+  @param value is the speed to set for the delay
+  */  
+  public void setDelay(int value)
+  {
+    delay = Control.MAX_SPEED - value;
+	delaySelector.setValue(value);
+    mThread.setDelay(delay);
+  }
+  
+  /**
+  Sets the number of elements to sort. MergeThread is reset.
+  */
+  public void setNumberOfElements(int value)
+  {
+    sizeSelector.setValue(value);
+    size=value;
+	mThread.stop();
+	mThread= new MergeThread();
+	mThread.start(size,delay);
+	running=true;
+  }
+	
+  /**
+  Detects changes in the sliders and changes the values for size and delay as needed.
+  */
   public void stateChanged(ChangeEvent event)
   {
     if(event.getSource()==sizeSelector)
 	{
       int x = sizeSelector.getValue();
 	  size=x;
+	  mThread.stop();
+	  mThread= new MergeThread();
+	  mThread.start(size,delay);
+	  running=true;	  
 	}
 	if(event.getSource()==delaySelector)
 	{
@@ -90,6 +141,10 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	
   }
 
+  /**
+  Detects when the buttons are pressed and starts, stops, or pauses
+  the MergeThread execution when appropiate.
+  */
   public void actionPerformed(ActionEvent event)
   {
     if(event.getSource()==startButton)
@@ -118,17 +173,49 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	}
   }
   
-  public void universalStart()
+  /**
+  Stops the MergeThread then starts a new MergeThread
+  and sets running to true.
+  */
+  public void start()
   {
-    mThread.start(size,delay);
+	  mThread.stop();
+	  mThread= new MergeThread();
+	  mThread.start(size,delay);
+	  running=true;
   }
   
-  public void universalStop()
+  /**
+  Stops the MergeThread and sets running to false.
+  */
+  public void stop()
   {
     mThread.stop();
+	running=false;
   }
-
-  public void universalPause()
+  
+  /**
+  Determines if MergeThread is running.
+  @return true if MergeThread is running, false otherwise.
+  */
+  public boolean isRunning()
+  {
+    return running;
+  }
+  
+  /**
+  Determines if MergeThread's sort execution is paused.
+  @return true is execution is paused, false otherwise.
+  */
+  public boolean isPaused()
+  {
+    return pause;
+  }
+  
+  /**
+  Halts or resumes the execution of MergeThread.
+  */
+  public void resume()
   {
 	  pause=!pause;
 	  if(pause==true)
@@ -142,6 +229,10 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 		mThread.unpause();
 	  }  
   }
+  
+  /**
+  Paints a series of bars in the frame representing the numbers being sorted.
+  */
   public void paint(Graphics g)
   {
  	super.paint(g);
@@ -150,8 +241,8 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	{
 	int offset=0;
 	int x=10;
-	int y=500;
-	int width=(getWidth()-20)/size;
+	int y=getHeight()-(getHeight()/size);
+	int width=(getWidth()-10)/(size+1);
 	for(int i=0;i<data.length;i++)
 	{
 	  if(mThread.isFinished()==true)
@@ -166,16 +257,17 @@ public class MergeSort extends JInternalFrame implements ActionListener, ChangeL
 	}    
   }
   
+  /**
+  The paint method is continually called to update the visualization until the frame is closed.
+  */
   public void run()
   {
     while(!isClosed())
 	{
 	  repaint();
 	  	  try {Thread.sleep(10);}
-      catch (InterruptedException ex){}
-	  
+      catch (InterruptedException ex){}	  
 	 }
-
 	 executor.shutdownNow();
   }
 

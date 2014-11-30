@@ -24,7 +24,7 @@ public class QuickThread implements Runnable
   /** resumed is used to indicate if the quick sort should be running. */
   private boolean resumed = false;
   /** data is the elements to sort. */
-  private int[] data;
+  private float[] data;
   /** size is the number of elements to sort. */
   int size;
   /** delay is the number of milliseconds to wait between steps. */
@@ -59,7 +59,7 @@ public class QuickThread implements Runnable
 		resumed=true;
 		pause=false;
 		executor.execute(this);
-		int[] data=null;
+		float[] data=null;
   	}
 	
 	/**
@@ -126,11 +126,11 @@ public class QuickThread implements Runnable
   	public void start(int length, int d)
 	{	        
 	    size=length;
-		data = new int[size];
+		data = new float[size];
 		Random num= new Random();
 		for(int i=0;i<size;i++)
 		{
-		  data[i]=num.nextInt(50);
+		  data[i]=num.nextInt(size-5) * (1.0f / (float)size);;
 		}
 		resumed = true;
 	    start=true;	
@@ -166,7 +166,7 @@ public class QuickThread implements Runnable
   Gets the data being sorted.
   @return an array of integers that is being sorted.
   */  
-  public int[] getData()
+  public float[] getData()
   {
 	return data;
   }
@@ -194,7 +194,7 @@ public class QuickThread implements Runnable
     if(resumed==true)
 	{
     int pivotIndex=left;
-	int pivotValue=data[pivotIndex];
+	float pivotValue=data[pivotIndex];
 	data[pivotIndex]=data[right];
 	data[right]=pivotValue;
 	storeIndex=left;
@@ -202,14 +202,14 @@ public class QuickThread implements Runnable
 	{
 	  if(data[i] < pivotValue)
 	  {
-	    int holdValue=data[storeIndex];
+	    float holdValue=data[storeIndex];
 		data[storeIndex]=data[i];
 		data[i]=holdValue;
 		highlight=i;
 		storeIndex=storeIndex+1;
 	  }
 	}
-	int holdValue=data[storeIndex];
+	float holdValue=data[storeIndex];
 	highlight=storeIndex;
 	data[storeIndex]=data[right];
 	data[right]=holdValue;

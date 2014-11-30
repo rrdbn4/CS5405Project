@@ -128,7 +128,7 @@ public class MergeThread implements Runnable
 	
   /**
   This method is what runs when the thread begins.
-  After the merge sort is sorted, this method will start the merge sort.
+  After the merge sort is started, this method will start the merge sort.
   When the merge sort is stopped, this method shutdowns the thread.
   */  
   public void run()

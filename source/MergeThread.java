@@ -25,7 +25,7 @@ public class MergeThread implements Runnable
   /** resumed is used to indicate if the merge sort should be running. */
   private boolean resumed = false;
   /** data is the elements to sort. */
-  private int[] data;
+  private float[] data;
   /** size is the number of elements to sort. */
   int size;
   /** pause is a flag to determine if execution should be paused. */
@@ -127,11 +127,11 @@ public class MergeThread implements Runnable
 	{	        
 	    size=length;
 		delay=d;
-		data = new int[size];
+		data = new float[size];
 		Random num= new Random();
 		for(int i=0;i<size;i++)
 		{
-		  data[i]=num.nextInt(50);
+		  data[i]=num.nextInt(size-5) * (1.0f / (float)size);
 		}
 		resumed = true;
 	    start=true;	
@@ -164,7 +164,7 @@ public class MergeThread implements Runnable
   Gets the data being sorted.
   @return an array of integers that is being sorted.
   */
-  public int[] getData()
+  public float[] getData()
   {
 	return data;
   }
@@ -192,8 +192,8 @@ public class MergeThread implements Runnable
 	{
     int left=q-p+1;
 	int right=r-q;
-	int L[]= new int[left+2];
-	int R[]=new int[right+2];
+	float L[]= new float[left+2];
+	float R[]=new float[right+2];
 	for(int i=1;i<=left; i++)
 	{
 	  L[i]=data[p+i-1];

@@ -1,3 +1,7 @@
+/**
+@author Matthew Lindner, Holly Busken, Robert Dunn
+@version 1.0
+*/
 package code;
 
 import java.awt.BorderLayout;
@@ -8,33 +12,89 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+The Driver class creates a frame to manage all the sorts and demo information.
+*/
 public class Driver extends JFrame implements ActionListener, ChangeListener
 {
+    /** desktop is pane to hold all JInternalFrames. */
 	private JDesktopPane desktop = new JDesktopPane();
-	private JMenuItem author, problemDescription, help, references, bubbleSortMenuItem, selectionSortMenuItem, mergeSortMenuItem, quickSortMenuItem, heapSortMenuItem, shellSortMenuItem;
-	private JCheckBox bubbleSortItem, selectionSortItem, mergeSortItem, quickSortItem, heapSortItem, shellSortItem;
+	/** author is the menu item for displaying author information. */
+	private JMenuItem author;
+	/** problemDescription is the menu item for displaying information about the problem. */
+	private JMenuItem problemDescription;
+	/** help is the menu item for displaying help information. */
+	private JMenuItem help;
+	/** references is the menu item for displaying reference information. */
+	private JMenuItem references;
 	
+	/** bubbleSortMenuItem is the menu item for displaying the bubble sort visualization. */
+	private JMenuItem bubbleSortMenuItem;
+	/** selectionSortMenuItem is the menu item for displaying the selection sort visualization.*/
+	private JMenuItem selectionSortMenuItem
+	/** mergeSortMenuItem is the menu item for displaying the merge sort visualization. */
+	private JMenuItem mergeSortMenuItem;
+	/** quickSortMenuItem is the menu item for displaying the quick sort visualization.*/
+	private JMenuItem quickSortMenuItem;
+	/** heapSortMenuItem is the menu item for displaying the heap sort visualization. */
+	private JMenuItem heapSortMenuItem;
+	/** shellSortMenuItem is the menu item for displaying the shell sort visualization. */
+	private JMenuItem shellSortMenuItem;
+	
+	/** bubbleSortItem is the check box for displaying the bubble sort visualization. */
+	private JCheckBox bubbleSortItem;
+	/** selectionSortItem is the check box for displaying the selection sort visualization. */
+	private JCheckBox selectionSortItem;
+	/** mergeSortItem is the check box for displaying the merge sort visualization. */
+	private JCheckBox mergeSortItem; 
+	/** quickSortItem is the check box for displaying the quick sort visualization. */
+	private JCheckBox quickSortItem; 
+	/** heapSortItem is the check box for displaying the heap sort visualization.*/
+	private JCheckBox heapSortItem; 
+	/** shellSortItem is the check box for displaying the shell sort visualization. */
+	private JCheckBox shellSortItem;
+	
+	/** authors is a frame for displaying author information. */
 	private Authors authors = new Authors();
+	/** problem is a frame for displaying information about the problem. */ 
 	private ProblemDescription problem = new ProblemDescription();
+	/** helpWindow is a frame for displaying help information. */
 	private Help helpWindow = new Help();
+	/** refWindow is a frame for displaying reference information. */
 	private References refWindow = new References();
 	
+	/** ss is a frame for visualizing the selection sort algorithm.*/
 	private SelectionSort ss;
+	/** hs is a frame for visualizing the heap sort algorithm.*/
 	private HeapSort hs;
+	/** bs is a frame for visualizing the bubble sort algorithm.*/
 	private BubbleSort bs;
+	/** shs is a frame for visualizing the shell sort algorithm. */
 	private ShellSort shs;
+	/** ms is a frame for visualizing the merge sort algorithm.*/
 	private MergeSort ms;
+	/** qs is a frame for visualizing the quick sort algorithm.*/
 	private QuickSort qs;
 	
+	/** sleepTime is the speed for the sorting algorithms.*/
 	private int sleepTime = Control.DEFAULT_SPEED;
+	/** arraySize is the number of elements to sort. */
 	private int arraySize = Control.DEFUALT_NUM_OF_ELEMENTS;
 	
+	/** container is a panel for holding the buttons and sliders for the sorting algorithms.*/
 	private JPanel container;
+	/** startStop is a button for starting or stopping all sorting algorithms checked.*/
 	private JButton startStop;
+	/** pauseResume is a button for pausing or resuming all sorting algorithms checked.*/
 	private JButton pauseResume;
+	/** speed is a slider for changing the speed of sorting.*/
 	private JSlider speed;
+	/** numElements is a slider for changing the number of elements to sort.*/
 	private JSlider numElements;
 
+	/**
+	Creates a frame, menu bar, and buttons to use with all sorts.
+	*/
 	public Driver()
 	{
 		super("Sort");
@@ -67,6 +127,9 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		desktop.add(refWindow);
 	}
 
+	/**
+	Detects button and check box clicks and takes the corresponding actions for them.
+	*/
 	public void actionPerformed(ActionEvent e)
 	{
 	    if(e.getSource() instanceof JCheckBox)
@@ -308,6 +371,36 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 						shs.start();
 					}
 				}
+				if (ms != null && !ms.isClosed())
+				{ 
+					if (ms.isRunning() == true)
+					{
+						if(ms.isPaused())
+						{
+							ms.resume();
+						}
+						ms.stop();
+					}
+					else
+					{
+						ms.start();
+					}
+				}
+				if (qs != null && !qs.isClosed())
+				{ 
+					if (qs.isRunning() == true)
+					{
+						if(qs.isPaused())
+						{
+							qs.resume();
+						}
+						qs.stop();
+					}
+					else
+					{
+						qs.start();
+					}
+				}
 			}
 			else if (e.getSource() == pauseResume)
 			{
@@ -379,10 +472,48 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 						}
 					}
 				}
+				if (ms != null && !ms.isClosed())
+				{ 
+					if (ms.isPaused() == true)
+					{
+						if (ms.isRunning() == true)
+						{
+							ms.resume();
+						}
+					}
+					else
+					{
+						if (ms.isRunning() == true)
+						{
+							ms.resume();
+						}
+					}
+				}
+				if (qs != null && !qs.isClosed())
+				{ 
+					if (qs.isPaused() == true)
+					{
+						if (qs.isRunning() == true)
+						{
+							qs.resume();
+						}
+					}
+					else
+					{
+						if (qs.isRunning() == true)
+						{
+							qs.resume();
+						}
+					}
+				}				
 			}
 		}
 	}
 	
+	/**
+	Creates a menu bar for information about the authors, the problem,
+	references, and for selecting sorting algorithms.
+	*/
 	private JMenuBar setupMenuBar()
 	{
 		JMenuBar menuBar = new JMenuBar();
@@ -453,6 +584,10 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		return menuBar;
 	}
 
+	/**
+	Detects changes in both the speed slider and delay slider 
+	and does the corresponding actions for the changes.
+	*/
 	public void stateChanged(ChangeEvent e)
 	{
 		if (e.getSource() == speed)
@@ -476,15 +611,15 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{
 				shs.setDelay(speed.getValue());
 			}
-			
-			/*if (bs != null && bs.isClosed() == false)
+			if (ms != null && ms.isClosed() == false)
 			{
-				bs.setDelay(speed.getValue());
+				ms.setDelay(speed.getValue());
 			}
-			...
-			...
-			...
-			*/
+			if (qs != null && qs.isClosed() == false)
+			{
+				qs.setDelay(speed.getValue());
+			}			
+			
 			
 		}
 		else if (e.getSource() == numElements)
@@ -507,15 +642,15 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{
 				shs.setNumberOfElements(arraySize);
 			}
-			
-			/*if (qs != null && qs.isClosed() == false)
+			if (ms != null && ms.isClosed() == false)
 			{
-				setArray(arraySize);
+				ms.setNumberOfElements(arraySize);
 			}
-			...
-			...
-			...
-			*/
+			if (qs != null && qs.isClosed() == false)
+			{
+				qs.setNumberOfElements(arraySize);
+			}			
+			
 		}
 	}
 }	

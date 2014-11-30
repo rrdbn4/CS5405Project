@@ -111,6 +111,7 @@ public class QuickSort extends JInternalFrame implements ActionListener, ChangeL
   
   /**
   Sets the number of elements to sort. QuickThread is reset.
+  @param value is the new number of elements to sort.
   */  
   public void setNumberOfElements(int value)
   {

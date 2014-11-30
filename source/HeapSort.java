@@ -426,7 +426,7 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	
 	/**
 	 * Sets sleepTime, and changes the value of the sleep slider
-	 * @param sleep The new sleep value
+	 * @param delay The new sleep value
 	 */
 	public void setDelay(final int delay)
 	{

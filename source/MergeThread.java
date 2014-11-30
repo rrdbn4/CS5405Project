@@ -1,3 +1,9 @@
+/**
+ * @author Holly Busken
+ * @version 1.0
+ * Merge sort implementation.
+ * Executes the sorting algorithm on a list of numbers. 
+*/
 package code;
 import javax.swing.*;
 import java.awt.*;
@@ -10,13 +16,14 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.*;
 import java.util.Random;
 
+/**
+The MergeThread class runs a merge sort implementation in it's own thread.
+*/
 public class MergeThread implements Runnable
 {
 
   private boolean resumed = false;
-  private Thread sort = null;
   private int[] data;
-  private boolean listChange=false;
   int size;
   boolean pause;
   int delay;
@@ -31,7 +38,9 @@ public class MergeThread implements Runnable
   boolean start=false;
   boolean done=false;
   
-
+  /**
+  The constructor creates the thread for the merge sort and starts it.
+  */
   	public MergeThread()
   	{
 		executor = Executors.newFixedThreadPool(1);
@@ -41,40 +50,66 @@ public class MergeThread implements Runnable
 		data = null;
   	}
 	
+	/**
+	Gets the index of the value to be highlighted when displayed.
+	@return The index of the array to be highlighted when displayed.
+	*/
 	public int getHighlight()
 	{
 	  return highlight;
 	}
 	
+	/**
+	Determines if the merge sort is finished running.
+	@return true if the merge sort has finished sorting, false otherwise.
+	*/
 	public boolean isFinished()
 	{
 	  return done;
 	}
 	
+	/**
+	Signals the thread that the merge sort should stop.
+	*/
 	public void stop()
 	{
 	  resumed=false;
 	}
 	
+	/**
+	Signals to the thread that the merge sort should be paused.
+	*/
 	public void pause()
 	{
       pause=true;
 	}
 	
+	/**
+	Sets the delay time to a specific value.
+	@param time is the new delay time for execution.
+	*/
 	public void setDelay(int time)
 	{
 	  delay=time;
 	}
 	
+	/**
+	Signals the thread that it should resume execution.
+	*/
 	public void unpause()
 	{
 	  pause=false;
-	  //System.out.println("unpause");
 	  lock.lock();
       condition.signal();
 	  lock.unlock();
 	}
 
+	/**
+	Starts the execution of the merge sort algorithm with the specified
+	number of elements, length, with the specified delay time, d.
+	@param length is the number of elements to sort.
+	@param d is the delay time to use for each step of the sort.
+	*/
   	public void start(int length, int d)
 	{	        
 	    size=length;
@@ -91,16 +126,18 @@ public class MergeThread implements Runnable
 		done=false;
 	}
 	
-	
+  /**
+  This method is what runs when the thread begins.
+  After the merge sort is sorted, this method will start the merge sort.
+  When the merge sort is stopped, this method shutdowns the thread.
+  */  
   public void run()
   {
    while(resumed==true)
    {
-    // System.out.println("here");
      if(start==true)
 	 {
        mSort(0,data.length-1);	  
-	   //System.out.println("STARTED");
 	   start=false;
 	 }
 	 try {Thread.sleep(10);}
@@ -110,32 +147,33 @@ public class MergeThread implements Runnable
    executor.shutdownNow();
   }
 
+  /**
+  Gets the data being sorted.
+  @return an array of integers that is being sorted.
+  */
   public int[] getData()
   {
-    //System.out.println("output()");
-	/*
-    string="";
-	for(int i=0;i<size;i++)
-	  string+=data[i]+" ";
-	return string;*/
 	return data;
-
   }
 
+  /**
+  Merges the numbers of two sub groups and sorts them.
+  @param p is the start index of the sub group.
+  @param q is the midpoint index of the sub group.
+  @param r is the end index of the sub group.
+  */
   void merge(int p, int q, int r)
   {
     if(pause==true)
 	{
 	  lock.lock();  
-	  //System.out.println("pause");
 	  try
 	  {
   	  condition.await();
 	   }
 	   catch(InterruptedException ex) {}
 	   lock.unlock();
-	}
-  
+	}  
   
     if(resumed==true)
 	{
@@ -177,6 +215,11 @@ public class MergeThread implements Runnable
 
   }
   
+  /**
+  Breaks the list of numbers into halves then merges them together.
+  @param p is the starting index of the numbers to sort.
+  @param r si the end index of the numbers to sort.
+  */
   void mSort(int p, int r)
   {
     if(resumed==true)

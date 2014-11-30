@@ -22,20 +22,33 @@ The MergeThread class runs a merge sort implementation in it's own thread.
 public class MergeThread implements Runnable
 {
 
+  /** resumed is used to indicate if the merge sort should be running. */
   private boolean resumed = false;
+  /** data is the elements to sort. */
   private int[] data;
+  /** size is the number of elements to sort. */
   int size;
+  /** pause is a flag to determine if execution should be paused. */
   boolean pause;
+  /** delay is the number of milliseconds to wait between steps. */
   int delay;
+  /** highlight is the index of the value to highlight when displayed. */
   int highlight=-1;
+  /** executor is the thread service for the merge sort. */
   private final ExecutorService executor;
-  String string;
+  /** startButton is the button to use for starting the merge sort. */
   JButton startButton;
+  /** stop is the button to use for stopping the merge sort. */
   JButton stop;
+  /** pauseButton is the button to use for pausing the merge sort execution. */
   JButton pauseButton;
+  /** lock is used for locking thread when paused. */
   public Lock lock=new ReentrantLock();
+  /** condition is used for indicating when the thread should be unpaused or paused. */
   public Condition condition=lock.newCondition();
+  /** start is a flag for indicating when the merge sort should start in the thread's execution. */
   boolean start=false;
+  /** done is a flag for indicating when the merge sort has completed sorting the elements. */
   boolean done=false;
   
   /**

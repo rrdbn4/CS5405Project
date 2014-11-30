@@ -364,7 +364,7 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	
 	/**
 	 * Sets sleepTime, and changes the value of the sleep slider
-	 * @param sleep The new sleep value
+	 * @param delay The new sleep value
 	 */
 	public void setDelay(final int delay)
 	{

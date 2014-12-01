@@ -94,7 +94,7 @@ public class SelectionSort extends JInternalFrame implements Runnable, ChangeLis
 	public SelectionSort()
 	{
 		super("Selection Sort", true, true, true, true);
-		setBounds(0, 0, 500, 400);
+		setBounds(0, 0, 600, 400);
 		setMinimumSize(new Dimension(450, 200));
 	
 		mutex = new ReentrantLock();

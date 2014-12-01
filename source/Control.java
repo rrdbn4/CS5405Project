@@ -1,3 +1,7 @@
+/**
+@author Matthew Lindner, Holly Busken, Robert Dunn
+@version 1.0
+*/
 package code;
 
 /**

@@ -28,8 +28,9 @@ public class References extends JInternalFrame
 	{
 		super("References", true, true, true, true);
 		setBounds(20, 20, width, height);
-		
-		textArea = new JTextArea("Heap sort was adapted from pseduo-code \"Introduction To Algorithms\", Third Edition, pages 154, 157, and 160.");
+		String output ="Heap sort was adapted from pseduo-code \"Introduction To Algorithms\", Third Edition, pages 154, 157, and 160.\n";
+		output+="Quick sort was adapted from pseudo-code from Wikipedia, http://en.wikipedia.org/wiki/Quicksort\n";
+		textArea = new JTextArea(output);
 		
 		/**
 		 * The references text is read only.

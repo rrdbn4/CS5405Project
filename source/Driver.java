@@ -140,8 +140,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 		  	if (bs == null || bs.isClosed())		
 			{		
 				bs = new BubbleSort();		
-				desktop.add(bs);  //add bs to the desktop		
-				bs.start();		
+				desktop.add(bs);  //add bs to the desktop
 			}		
 			bs.setVisible(true);		
 			bs.toFront();	
@@ -192,7 +191,6 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 			{
 				shs = new ShellSort();
 				desktop.add(shs);  //add bs to the desktop
-				shs.start();
 			}
 			shs.setVisible(true);
 			shs.toFront();		  
@@ -290,6 +288,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 				{ 
 					ms = new MergeSort();
 					desktop.add(ms);
+					ms.start();
 					
 				}
 				ms.setVisible(true);
@@ -301,6 +300,7 @@ public class Driver extends JFrame implements ActionListener, ChangeListener
 				{ 
 					qs = new QuickSort();
 					desktop.add(qs);
+					qs.start();
 					
 				}
 				qs.setVisible(true);

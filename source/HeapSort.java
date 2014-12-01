@@ -98,7 +98,7 @@ public class HeapSort extends JInternalFrame implements Runnable, ChangeListener
 	public HeapSort()
 	{
 		super("Heap Sort", true, true, true, true);
-		setBounds(400, 400, 500, 400);
+		setBounds(400, 400, 600, 400);
 		setMinimumSize(new Dimension(450, 200));
 
 		mutex = new ReentrantLock();

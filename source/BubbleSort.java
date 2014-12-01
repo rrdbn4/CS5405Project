@@ -25,7 +25,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
   /**
   The randomized array of elements being sorted for the visual
   */
-	float[] randArray;
+	float[] randArray = new float[0];
   /**
   The size of randArray. This defaults to the global default constant
   */
@@ -50,7 +50,7 @@ public class BubbleSort extends JInternalFrame implements Runnable, ChangeListen
   /**
   The bool flag to tell if the thread is stopped
   */
-  boolean isRunning = true;
+  boolean isRunning = false;
 
   /**
   The container for the sliders, buttons, and gridlayout

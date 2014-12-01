@@ -30,6 +30,7 @@ public class References extends JInternalFrame
 		setBounds(20, 20, width, height);
 		String output ="Heap sort was adapted from pseduo-code \"Introduction To Algorithms\", Third Edition, pages 154, 157, and 160.\n";
 		output+="Quick sort was adapted from pseudo-code from Wikipedia, http://en.wikipedia.org/wiki/Quicksort\n";
+		output+= "Clock class was adapted from Dr. Sabharwals notes http://web.mst.edu/~chaman/courses/CS342/Demos/14MultiTasking/03ClockInMenu/\n"
 		textArea = new JTextArea(output);
 		
 		/**
